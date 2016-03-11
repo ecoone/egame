@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>egame计时器模块</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+  <link rel="stylesheet" href="css/reset.css"/>
+  <script type="text/javascript" src="../lib/eco.js"></script>
+  <script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+    egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite){
+        console.log(TilingSprite)
+            //创建一个游戏对象
+            var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
+            game.load =  new Loader(game);
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+
+                },
+                create:function(){
+                    game.stage.backgroundColor = 0xffffff;
+                    var basicText = new Text('当前计数：0');
+                    var count = 0;
+                    basicText.x = 150;
+                    basicText.y = 100;
+                    this.stage.addChild(basicText);
+                    
+                    //每一秒更新一次
+                    game.time.events.loop(egame.Timer.SECOND, function(){
+                      basicText.text ='当前计数：'+(count++);  
+                    }, this);
+                },
+                update:function(){
+                }
+            };
+            //启动游戏
+            game.boot();
+
+            //启动状态
+            game.state.add("loadding",loaddingStatus,true);
+            // game.state.start("loadding");
+                 
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>egame文本模块</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+  <link rel="stylesheet" href="css/reset.css"/>
+  <script type="text/javascript" src="../lib/eco.js"></script>
+  <script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+      egame.use(['Game','Loader','Texture','Sprite','Text','Sound','Image','Audio'],function(Game,Loader,Texture,Sprite,Text,Sound){
+            //创建一个游戏对象
+            var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
+            var load =  new Loader(game);
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+                   
+                },
+                create:function(){
+                    //设置背景色
+                    game.stage.backgroundColor = 0x1099bb;
+                    var basicText = new Text('普通文本');
+                    basicText.x = 350;
+                    basicText.y = 30;
+                    game.stage.addChild(basicText);
+                    var style = {
+                        font : 'bold italic 36px Arial',
+                        fill : '#F7EDCA',
+                        stroke : '#4a1850',
+                        strokeThickness : 5,
+                        dropShadow : true,
+                        dropShadowColor : '#000000',
+                        dropShadowAngle : Math.PI / 6,
+                        dropShadowDistance : 6,
+                        wordWrap : true,
+                        wordWrapWidth : 440
+                    };
+
+                    var richText = new Text('样式文本',style);
+                    richText.x = 30;
+                    richText.y = 30;
+
+                    game.stage.addChild(richText);
+                    
+                },
+                update:function(){
+                }
+            };
+
+            //添加状态并在游戏启动后自动启动
+            game.state.add("loadding",loaddingStatus,true);
+            game.boot();
+                 
+      });
+  </script>
+</body>
+</html>

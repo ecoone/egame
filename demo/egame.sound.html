@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>egame声音播放模块</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+	<link rel="stylesheet" href="css/reset.css"/>
+	<script type="text/javascript" src="../lib/eco.js"></script>
+	<script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+	  egame.use(['Game','Loader','Texture','Sprite','Text','Sound',"InteractionManager",'Image','Audio'],function(Game,Loader,Texture,Sprite,Text,Sound){
+            //创建一个游戏对象
+            var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
+            var load =  new Loader(game);
+
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+                    game.load.audio("sound","musics/367664.mp3");
+                    game.stage.backgroundColor = 0x1099bb;
+                    var basicText = new Text('当前进度：0%');
+                    basicText.x = 150;
+                    basicText.y = 100;
+                    this.stage.addChild(basicText);
+                    //资源加载过程的进度条
+                    game.load.onResourceComplete.add(function(){
+                        basicText.text ='当前进度：'+game.load.progress+'%' ;
+                    });
+
+                    game.load.onLoadComplete.add(function(){
+                            game.stage.removeChild(basicText); 
+                    })
+                },
+                create:function(){
+                    var sound = new Sound("sound");
+                    game.stage.backgroundColor = 0x1099bb;
+                    var playText = new Text("播放");
+                    var pauseText = new Text("暂停");
+                    var resumeText = new Text("恢复");
+                    var stopText = new Text("停止");
+                    var muteText = new Text("静音");
+                    var unmuteText = new Text("解除静音");
+
+                    playText.x = 50;
+                    playText.y = 200;
+
+                    pauseText.x = 130;
+                    pauseText.y = 200;
+
+                    resumeText.x = 210;
+                    resumeText.y = 200;
+
+                    stopText.x = 290;
+                    stopText.y = 200;
+
+                    muteText.x = 370;
+                    muteText.y = 200;
+
+                    unmuteText.x = 450;
+                    unmuteText.y = 200;
+
+                    this.stage.addChild(playText);
+                    this.stage.addChild(pauseText);
+                    this.stage.addChild(resumeText);
+                    this.stage.addChild(stopText);
+                    this.stage.addChild(muteText);
+                    this.stage.addChild(unmuteText);
+
+                    playText.interactive = true;
+                    pauseText.interactive = true;
+                    resumeText.interactive = true;
+                    stopText.interactive = true;
+                    muteText.interactive = true;
+                    unmuteText.interactive = true;
+                    //播放声音，多次调用播放多个声音
+                    playText.on('mousedown', function(){
+                        sound.play();
+                    });
+                    //暂停声音播放
+                    pauseText.on('mousedown', function(){
+                        sound.pause();
+                    });
+                    //恢复声音播放
+                    resumeText.on('mousedown', function(){
+                        sound.resume();
+                    });
+                    //停止声音播放，将声音恢复到最初的位置，可以使用play在播放，或者resume在播放
+                    stopText.on('mousedown', function(){
+                        sound.stop();
+                    });
+                    //静音
+                    muteText.on('mousedown', function(){
+                        sound.mute();
+                    });
+                    //恢复静音
+                    unmuteText.on('mousedown', function(){
+                        sound.unmute();
+                    });
+                                                            
+                },
+                update:function(){
+                }
+            };
+            //启动状态
+            game.state.add("loadding",loaddingStatus,true);
+            //启动游戏
+            game.boot();
+                 
+      });
+	</script>
+</body>
+</html>

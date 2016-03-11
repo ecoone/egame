@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>egame精灵表</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+	<link rel="stylesheet" href="css/reset.css"/>
+	<script type="text/javascript" src="../lib/eco.js"></script>
+	<script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+	  egame.use(['Game','Loader','Texture','Sprite','Text','SpriteSheetAnimation','Image','Json'],function(Game,Loader,Texture,Sprite,Text,SpriteSheetAnimation){
+            //创建一个游戏对象
+            var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
+            game.load =  new Loader(game);
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+                    game.load.image("fighter","images/fighter.png");
+                    game.load.json("fighterConfig","text/fighter.json");
+                    game.stage.backgroundColor = 0x1099bb;
+                    var basicText = new Text('当前进度：0%');
+                    basicText.x = 150;
+                    basicText.y = 100;
+                    game.stage.addChild(basicText);
+                    //资源加载过程的进度条
+                    game.load.onResourceComplete.add(function(){
+                        basicText.text ='当前进度：'+game.load.progress+'%' ;
+                    });
+                    game.load.onLoadComplete.add(function(){
+                            game.stage.removeChild(basicText); 
+                    })
+                },
+                create:function(){
+                    console.log("create");
+                    game.stage.backgroundColor = 0xffffff;
+                    var spriteSheetAnimation = new SpriteSheetAnimation(game,"fighter","fighterConfig");
+                    spriteSheetAnimation.add('walk',[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]);
+                    spriteSheetAnimation.play('walk',20, true);
+                    this.spriteSheetAnimation = spriteSheetAnimation;
+                    game.stage.addChild(spriteSheetAnimation);
+                },
+                update:function(){
+                }
+            };
+            //启动游戏
+            game.boot();
+            //启动状态
+            game.state.add("loadding",loaddingStatus,true);
+            // game.state.start("loadding");
+                 
+      });
+	</script>
+</body>
+</html>

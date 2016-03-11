@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>egame粒子效果</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+    <link rel="stylesheet" href="css/reset.css"/>
+    <script type="text/javascript" src="../lib/eco.js"></script>
+    <script type="text/javascript" src="../src/egame.js"></script>
+    <script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+      egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Physics','Arcade_Body','Particles','Emitter','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite,Physics,Body,Particles,Emitter){
+            //创建一个游戏对象
+            var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
+            game.load =  new Loader(game);
+            game.particles = new Particles(game);
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+                    game.physics = new Physics(game);
+                    game.load.image("snow","images/snow.png");
+                    game.load.image("snowlarge","images/snowlarge.png");
+                    game.load.image("snowflakes_large","images/snowflakes_large.png");
+                    game.load.image("starfield","images/starfield.jpg");
+                    game.stage.renderer.backgroundColor = 0x1099bb;
+                    var basicText = new Text('当前进度：0%');
+                    basicText.x = 150;
+                    basicText.y = 100;
+                    game.stage.addChild(basicText);
+                    //资源加载过程的进度条
+                    game.load.onResourceComplete.add(function(){
+                        basicText.text ='当前进度：'+game.load.progress+'%' ;
+                    });
+                    game.load.onLoadComplete.add(function(){
+                            game.stage.removeChild(basicText); 
+                    })
+                },
+                create:function(){
+                    game.stage.renderer.backgroundColor = 0x1099bb;
+
+                    var texture = Texture.fromResource('snow');
+                    var texture2 = Texture.fromResource('snowlarge');
+                 
+                    // var back_emitter = new  Emitter(game, game.world.centerX,  -32, 600);
+                    var back_emitter = new  Emitter(game, game.world.centerX,  -32, 300);
+                    // back_emitter.makeParticles('snowflakes', [0, 1, 2, 3, 4, 5]);
+                    back_emitter.makeParticles(texture);
+                    back_emitter.maxParticleScale = 0.6;
+                    back_emitter.minParticleScale = 0.2;
+                    back_emitter.setYSpeed(50, 100);
+                    back_emitter.gravity = 0;
+                    back_emitter.width = game.world.width * 1.5;
+                    back_emitter.minRotation = 0;
+                    back_emitter.maxRotation = 40;
+                    back_emitter.start(false, 14000, 20);
+
+                    front_emitter = new  Emitter(game,game.world.centerX, -32, 50);
+                    front_emitter.makeParticles(texture2);
+                    front_emitter.maxParticleScale = 1;
+                    front_emitter.minParticleScale = 0.5;
+                    front_emitter.setYSpeed(100, 200);
+                    front_emitter.gravity = 0;
+                    front_emitter.width = game.world.width * 1.5;
+                    front_emitter.minRotation = 0;
+                    front_emitter.maxRotation = 40;
+                    front_emitter.start(false, 6000, 1000);
+
+            
+                },
+                update:function(){
+                    //两个精灵做碰撞检测
+                    // game.physics.arcade.collide(this.bunny, this.bunny2, this.collideHandler, null, this);
+                },
+                collideHandler:function(){
+                    //碰撞处理
+                    // arguments[0].kill();
+                }
+            };
+            //启动游戏
+            game.boot();
+            //启动状态
+            game.state.add("loadding",loaddingStatus,true);
+                 
+      });
+    </script>
+</body>
+</html>

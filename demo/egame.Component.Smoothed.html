@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>egame组件LifeSpan测试</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+  <link rel="stylesheet" href="css/reset.css"/>
+  <script type="text/javascript" src="../lib/eco.js"></script>
+  <script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+    egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Image','InteractionManager'],function(Game,Loader,Texture,Sprite,Text,TilingSprite){
+            //创建一个游戏对象
+            var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
+            game.load =  new Loader(game);
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+                    game.load.image("mniya1","images/1.jpg");
+                    game.load.image("mniya2","images/2.jpg");
+                    game.load.image("starfield","images/starfield.jpg");
+                    game.stage.renderer.backgroundColor = 0x1099bb;
+                    var basicText = new Text('当前进度：0%');
+                    basicText.x = 150;
+                    basicText.y = 100;
+                    this.stage.addChild(basicText);
+                    //资源加载过程的进度条
+                    game.load.onResourceComplete.add(function(){
+                        basicText.text ='当前进度：'+game.load.progress+'%' ;
+                    });
+                    game.load.onLoadComplete.add(function(){
+                            game.stage.removeChild(basicText); 
+                    })
+                },
+                create:function(){
+                    game.stage.renderer.backgroundColor = 0x1099bb;
+                    // game.stage.smoothed = false;
+
+                    var texture = Texture.fromResource('mniya1');
+                    var texture2 = Texture.fromResource('mniya2');
+                    // create a new Sprite using the texture
+                    var bunny = new Sprite(texture);
+                    // center the sprite's anchor point
+                    bunny.anchor.x = 0.5;
+                    bunny.anchor.y = 0.5;
+
+                    // move the sprite to the center of the screen
+                    bunny.position.x = 150;
+                    bunny.position.y = game.world.centerY-100;
+                    bunny.scale.x = 0.5;
+                    bunny.scale.y = 0.5;
+                    game.stage.addChild(bunny);
+ 
+                     // create a new Sprite using the texture
+                    var bunny2 = new Sprite(texture2);
+                    // center the sprite's anchor point
+                    bunny2.anchor.x = 0.5;
+                    bunny2.anchor.y = 0.5;
+
+                    // move the sprite to the center of the screen
+                    bunny2.position.x = 460;
+                    bunny2.position.y = game.world.centerY-150;
+                    bunny2.scale.x = 0.5;
+                    bunny2.scale.y = 0.5;
+                    bunny2.smoothed = false;
+                    game.stage.addChild(bunny2);           
+
+                    var leftText = new Text("Smoothed",{fill:'#ff0000'});
+                    var rightText = new Text("ArtPixel",{fill:'#00ff00'});
+
+
+
+                    leftText.x = 50;
+                    leftText.y = 200;
+
+                    rightText.x = 300;
+                    rightText.y = 200;
+
+                    this.stage.addChild(leftText);
+                    this.stage.addChild(rightText);
+
+                     leftText.interactive = true;
+                    rightText.interactive = true;
+
+
+                    //toggle
+                    leftText.on('mousedown', function(){
+                        bunny.smoothed = false;
+                        leftText.text ="ArtPixel";
+                    });
+
+                    //toggle
+                    rightText.on('mousedown', function(){
+                        bunny2.smoothed = true;
+                        rightText.text ="Smoothed";
+                    });
+                },
+                update:function(){
+                }
+            };
+            //启动游戏
+            game.boot();
+
+            //启动状态
+            game.state.add("loadding",loaddingStatus,true);
+            // game.state.start("loadding");
+                 
+      });
+  </script>
+</body>
+</html>

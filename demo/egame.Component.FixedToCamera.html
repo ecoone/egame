@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>egame组件FixedToCamera测试</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+  <link rel="stylesheet" href="css/reset.css"/>
+  <script type="text/javascript" src="../lib/eco.js"></script>
+  <script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+    egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite){
+            //创建一个游戏对象
+            var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
+            game.load =  new Loader(game);
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+                    game.load.image("mniya1","images/1.jpg");
+                    game.load.image("starfield","images/starfield.jpg");
+                    game.stage.renderer.backgroundColor = 0x1099bb;
+                    var basicText = new Text('当前进度：0%');
+                    basicText.x = 150;
+                    basicText.y = 100;
+                    this.stage.addChild(basicText);
+                    //资源加载过程的进度条
+                    game.load.onResourceComplete.add(function(){
+                        basicText.text ='当前进度：'+game.load.progress+'%' ;
+                    });
+                    game.load.onLoadComplete.add(function(){
+                            game.stage.removeChild(basicText); 
+                    })
+                },
+                create:function(){
+                    game.stage.renderer.backgroundColor = 0xffffff;
+                    var texture = Texture.fromResource('mniya1');
+                    var texture2 = Texture.fromResource('starfield');
+                    // create a new Sprite using the texture
+                    var bunny = new Sprite(texture,game);
+                    // center the sprite's anchor point
+                    bunny.anchor.x = 0.5;
+                    bunny.anchor.y = 0.5;
+
+                    // move the sprite to the center of the screen
+                    bunny.position.x = game.world.centerX;
+                    bunny.position.y = game.world.centerY;
+                    bunny.scale.x = 0.2;
+                    bunny.scale.y = 0.2;
+                    this.bunny = bunny;
+                    // create a new Sprite using the texture
+                    var bunny2 = new Sprite(texture,game);
+                    // center the sprite's anchor point
+                    bunny2.anchor.x = 0.5;
+                    bunny2.anchor.y = 0.5;
+
+                    // move the sprite to the center of the screen
+                    bunny2.position.x = game.world.centerX;
+                    bunny2.position.y = game.world.centerY+200;
+                    bunny2.scale.x = 0.2;
+                    bunny2.scale.y = 0.2;
+                    this.bunny2 = bunny2;
+                    var tilingSprite = new TilingSprite(texture2, 1920,1920);
+                    game.world.setBounds(0, 0, 1920, 1920);
+                    this.tilingSprite = tilingSprite;
+                    game.stage.addChild(tilingSprite);
+                    game.stage.addChild(bunny);
+                    game.stage.addChild(bunny2);
+                    bunny.fixedToCamera = true;
+                },
+                update:function(){
+                   game.camera.x++;
+                }
+            };
+            //启动游戏
+            game.boot();
+
+            //启动状态
+            game.state.add("loadding",loaddingStatus,true);
+            // game.state.start("loadding");
+                 
+      });
+  </script>
+</body>
+</html>

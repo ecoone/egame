@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>egame组件LifeSpan测试</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+  <link rel="stylesheet" href="css/reset.css"/>
+  <script type="text/javascript" src="../lib/eco.js"></script>
+  <script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+    egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Image','InteractionManager'],function(Game,Loader,Texture,Sprite,Text,TilingSprite){
+            //创建一个游戏对象
+            var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
+            game.load =  new Loader(game);
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+                    game.load.image("mniya1","images/1.jpg");
+                    game.load.image("starfield","images/starfield.jpg");
+                    game.stage.renderer.backgroundColor = 0x1099bb;
+                    var basicText = new Text('当前进度：0%');
+                    basicText.x = 150;
+                    basicText.y = 100;
+                    this.stage.addChild(basicText);
+                    //资源加载过程的进度条
+                    game.load.onResourceComplete.add(function(){
+                        basicText.text ='当前进度：'+game.load.progress+'%' ;
+                    });
+                    game.load.onLoadComplete.add(function(){
+                            game.stage.removeChild(basicText); 
+                    })
+                },
+                create:function(){
+                    game.stage.renderer.backgroundColor = 0xffffff;
+                    var texture = Texture.fromResource('mniya1');
+                    var texture2 = Texture.fromResource('starfield');
+                    // create a new Sprite using the texture
+                    var bunny = new Sprite(texture);
+                    // center the sprite's anchor point
+                    bunny.anchor.x = 0.5;
+                    bunny.anchor.y = 0.5;
+
+                    // move the sprite to the center of the screen
+                    bunny.position.x = game.world.centerX;
+                    bunny.position.y = game.world.centerY-100;
+                    bunny.scale.x = 0.2;
+                    bunny.scale.y = 0.2;
+                    bunny.health = 5;
+                    var tilingSprite = new TilingSprite(texture2, 1920,1920);
+                    game.world.setBounds(0, 0, 1920, 1920);
+                    this.tilingSprite = tilingSprite;
+                    game.stage.addChild(tilingSprite);
+                    game.stage.addChild(bunny);
+            
+
+                    var killText = new Text("杀死",{fill:'#ff0000'});
+                    var reviveText = new Text("复活",{fill:'#00ff00'});
+                    var autoKillText = new Text("3秒后自动消亡",{fill:'#00ff00'});
+                    var healText = new Text("增加生命值",{fill:'#00ff00'});
+                    var damageText = new Text("减少生命值",{fill:'#ff0000'});
+                    var healthText = new Text("当前生命值:"+bunny.health,{fill:'#00ff00'});
+
+
+                    killText.x = 50;
+                    killText.y = 200;
+
+                    healthText.x = 50;
+                    healthText.y = 270;
+
+                    reviveText.x = 130;
+                    reviveText.y = 200;
+
+                    autoKillText.x = 230;
+                    autoKillText.y = 270;
+
+                    healText.x = 250;
+                    healText.y = 200;
+
+                    damageText.x = 430;
+                    damageText.y = 200;
+
+
+                    this.stage.addChild(killText);
+                    this.stage.addChild(healthText);
+                    this.stage.addChild(reviveText);
+                    this.stage.addChild(autoKillText);
+                    this.stage.addChild(healText);
+                    this.stage.addChild(damageText);
+
+
+                    killText.interactive = true;
+                    reviveText.interactive = true;
+                    healText.interactive = true;
+                    damageText.interactive = true;
+                    autoKillText.interactive = true;
+
+                    //杀死对象
+                    killText.on('mousedown', function(){
+                        bunny.kill();
+                    });
+
+                    //自动杀死对象
+                    autoKillText.on('mousedown', function(){
+                        bunny.lifespan = 3000;
+                        console.log(111)
+                    });
+
+                    //恢复对象
+                    reviveText.on('mousedown', function(){
+                        bunny.revive();
+                    });
+
+                    //增加生命值
+                    healText.on('mousedown', function(){
+                        bunny.heal(1);
+                    });
+
+                    //减少生命值
+                    damageText.on('mousedown', function(){
+                        bunny.damage(1);
+                    });
+
+                    bunny.on("healed",function(){
+                        healthText.text = "当前生命值:"+bunny.health;
+                    });
+
+                    bunny.on("damaged",function(){
+                        healthText.text = "当前生命值:"+bunny.health;
+                    });
+
+                },
+                update:function(){
+                }
+            };
+            //启动游戏
+            game.boot();
+
+            //启动状态
+            game.state.add("loadding",loaddingStatus,true);
+            // game.state.start("loadding");
+                 
+      });
+  </script>
+</body>
+</html>

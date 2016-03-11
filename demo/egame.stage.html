@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>egame舞台模块</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+  <link rel="stylesheet" href="css/reset.css"/>
+  <script type="text/javascript" src="../lib/eco.js"></script>
+  <script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+      egame.use(['Game','Loader','Texture','Sprite','Text','Image','Audio'],function(Game,Loader,Texture,Sprite,Text){
+            //创建一个游戏对象
+            var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
+            var load =  new Loader(game);
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+                    //设置要加载的资源
+                    load.image("mniya1","images/1.jpg");
+
+                    //加载资源界面
+                    game.stage.renderer.backgroundColor = 0x1099bb;
+                    var basicText = new Text('当前进度：0%');
+                    basicText.x = 150;
+                    basicText.y = 100;
+                    game.stage.addChild(basicText);
+
+                    //资源加载状态捕获
+                    //加载资源完成时候调用
+                    game.load.onResourceComplete.add(function(){
+                        basicText.text ='当前进度：'+game.load.progress+'%' ;
+                    });
+                    game.load.onResourceError.add(function(resourceKey){
+                        alert("资源"+resourceKey+"加载失败");
+                    });
+                    // 所有加载资源完成时候调用
+                    game.load.onLoadComplete.add(function(){
+                        basicText.text ='当前进度：'+game.load.progress+'%' ;
+                        game.stage.removeChildren();
+                    });
+                },
+                create:function(){
+
+                    //设置舞台背景是否透明
+                    game.stage.transparent = true;
+
+                    //设置舞台背景色
+                    // game.stage.backgroundColor = 0x1099bb;
+                    
+                    //设置舞台上渲染图片是否平滑,默认是平滑
+                    game.stage.smoothed = true;
+
+                    //使用图片资源
+                    var texture = Texture.fromResource('mniya1');
+                    var minya1 = new Sprite(texture);
+                    minya1.anchor.x = 0.5;
+                    minya1.anchor.y = 0.5;
+                    minya1.scale.x =0.3;
+                    minya1.scale.y =0.3;
+                    minya1.position.x = 200;
+                    minya1.position.y = 150;
+
+                    //向舞台添加孩子
+                    this.stage.addChild(minya1);
+
+                    //舞台绘图上下文
+                    console.log(this.stage.context)
+
+                    //舞台渲染器
+                    console.log(this.stage.renderer)
+
+                    //舞台dom结构
+                    console.log(this.stage.canvas)
+
+                    //舞台高度
+                    console.log(this.stage.renderer.height)
+
+                    //舞台宽度
+                    console.log(this.stage.renderer.width)                    
+                },
+                update:function(){
+                }
+            };
+
+            //添加状态并在游戏启动后自动启动
+            game.state.add("loadding",loaddingStatus,true);
+            game.boot();
+                 
+      });
+  </script>
+</body>
+</html>
