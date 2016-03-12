@@ -1,11 +1,4 @@
 /**
- * @author       Timo Hausmann
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2015 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
  * A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts.
  * However I've tweaked it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result.
  * Original version at https://github.com/timohausmann/quadtree-js/

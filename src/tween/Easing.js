@@ -1,12 +1,4 @@
 egame.define("Easing", function() {
-    /* jshint curly: false */
-
-    /**
-     * @author       Richard Davey <rich@photonstorm.com>
-     * @copyright    2015 Photon Storm Ltd.
-     * @license      {@link https://github.com/photonstorm/egame/blob/master/license.txt|MIT License}
-     */
-
     /**
      * A collection of easing methods defining ease-in and ease-out curves.
      *

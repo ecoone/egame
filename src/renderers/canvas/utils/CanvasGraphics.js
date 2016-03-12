@@ -4,14 +4,14 @@ egame.define("CanvasGraphics", ["CONST"], function(CONST) {
      * A set of functions used by the canvas renderer to draw the primitive graphics data.
      * @static
      * @class
-     * @memberof PIXI
+     * @memberof egame
      */
     var CanvasGraphics = {};
 
     /*
      * Renders a Graphics object to a canvas.
      *
-     * @param graphics {PIXI.Graphics} the actual graphics object to render
+     * @param graphics {egame.Graphics} the actual graphics object to render
      * @param context {CanvasRenderingContext2D} the 2d drawing method of the canvas
      */
     CanvasGraphics.renderGraphics = function(graphics, context) {
@@ -168,7 +168,7 @@ egame.define("CanvasGraphics", ["CONST"], function(CONST) {
      * Renders a graphics mask
      *
      * @private
-     * @param graphics {PIXI.Graphics} the graphics which will be used as a mask
+     * @param graphics {egame.Graphics} the graphics which will be used as a mask
      * @param context {CanvasRenderingContext2D} the context 2d method of the canvas
      */
     CanvasGraphics.renderGraphicsMask = function(graphics, context) {
@@ -259,7 +259,7 @@ egame.define("CanvasGraphics", ["CONST"], function(CONST) {
      * Updates the tint of a graphics object
      *
      * @private
-     * @param graphics {PIXI.Graphics} the graphics that will have its tint updated
+     * @param graphics {egame.Graphics} the graphics that will have its tint updated
      *
      */
     CanvasGraphics.updateGraphicsTint = function(graphics) {

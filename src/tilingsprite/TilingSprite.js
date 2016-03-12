@@ -5,8 +5,8 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
      * A tiling sprite is a fast way of rendering a tiling image
      *
      * @class
-     * @extends PIXI.Sprite
-     * @memberof PIXI.extras
+     * @extends egame.Sprite
+     * @memberof egame.extras
      * @param texture {Texture} the texture of the tiling sprite
      * @param width {number}  the width of the tiling sprite
      * @param height {number} the height of the tiling sprite
@@ -17,7 +17,7 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
         /**
          * The scaling of the image that is being tiled
          *
-         * @member {PIXI.Point}
+         * @member {egame.Point}
          */
         this.tileScale = new Point(1, 1);
 
@@ -25,7 +25,7 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
         /**
          * The offset position of the image that is being tiled
          *
-         * @member {PIXI.Point}
+         * @member {egame.Point}
          */
         this.tilePosition = new Point(0, 0);
 
@@ -60,7 +60,7 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
          * The width of the sprite, setting this will actually modify the scale to achieve the value set
          *
          * @member {number}
-         * @memberof PIXI.extras.TilingSprite#
+         * @memberof egame.extras.TilingSprite#
          */
         width: {
             get: function() {
@@ -75,7 +75,7 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
          * The height of the TilingSprite, setting this will actually modify the scale to achieve the value set
          *
          * @member {number}
-         * @memberof PIXI.extras.TilingSprite#
+         * @memberof egame.extras.TilingSprite#
          */
         height: {
             get: function() {
@@ -94,7 +94,7 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
     /**
      * Renders the object using the Canvas renderer
      *
-     * @param renderer {PIXI.CanvasRenderer} a reference to the canvas renderer
+     * @param renderer {egame.CanvasRenderer} a reference to the canvas renderer
      * @private
      */
     TilingSprite.prototype._renderCanvas = function(renderer) {
@@ -168,7 +168,7 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
     /**
      * Returns the framing rectangle of the sprite as a Rectangle object
      *
-     * @return {PIXI.Rectangle} the framing rectangle
+     * @return {egame.Rectangle} the framing rectangle
      */
     TilingSprite.prototype.getBounds = function() {
         var width = this._width;
@@ -242,7 +242,7 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
 
     /**
      * Checks if a point is inside this tiling sprite
-     * @param point {PIXI.Point} the point to check
+     * @param point {egame.Point} the point to check
      */
     TilingSprite.prototype.containsPoint = function(point) {
         this.worldTransform.applyInverse(point, tempPoint);
@@ -283,7 +283,7 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
      *
      * @static
      * @param frameId {string} The frame Id of the texture in the cache
-     * @return {PIXI.extras.TilingSprite} A new TilingSprite using a texture from the texture cache matching the frameId
+     * @return {egame.extras.TilingSprite} A new TilingSprite using a texture from the texture cache matching the frameId
      * @param width {number}  the width of the tiling sprite
      * @param height {number} the height of the tiling sprite
      */
@@ -306,8 +306,8 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
      * @param width {number}  the width of the tiling sprite
      * @param height {number} the height of the tiling sprite
      * @param [crossorigin=(auto)] {boolean} if you want to specify the cross-origin parameter
-     * @param [scaleMode=PIXI.SCALE_MODES.DEFAULT] {number} if you want to specify the scale mode, see {@link PIXI.SCALE_MODES} for possible values
-     * @return {PIXI.extras.TilingSprite} A new TilingSprite using a texture from the texture cache matching the image id
+     * @param [scaleMode=egame.SCALE_MODES.DEFAULT] {number} if you want to specify the scale mode, see {@link egame.SCALE_MODES} for possible values
+     * @return {egame.extras.TilingSprite} A new TilingSprite using a texture from the texture cache matching the image id
      */
     TilingSprite.fromImage = function(imageId, width, height, crossorigin, scaleMode) {
         return new TilingSprite(Texture.fromImage(imageId, crossorigin, scaleMode), width, height);

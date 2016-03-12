@@ -1,11 +1,5 @@
 egame.define("Particles", function() {
     /**
-     * @author       Richard Davey <rich@photonstorm.com>
-     * @copyright    2015 Photon Storm Ltd.
-     * @license      {@link https://github.com/photonstorm/egame/blob/master/license.txt|MIT License}
-     */
-
-    /**
      * egame.Particles is the Particle Manager for the game. It is called during the game update loop and in turn updates any Emitters attached to it.
      *
      * @class egame.Particles

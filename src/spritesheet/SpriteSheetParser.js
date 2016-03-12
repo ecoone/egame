@@ -11,6 +11,7 @@ egame.define("SpriteSheetParser", ["Frame", "FrameData"], function(Frame, FrameD
          * Parse a Sprite Sheet and extract the animation frame data from it.
          *
          * @method egame.SpriteSheetParser.spriteSheet
+         * @param {string} resourceKey - 资源key
          * @param {number} frameWidth - The fixed width of each frame of the animation.
          * @param {number} frameHeight - The fixed height of each frame of the animation.
          * @param {number} [frameMax=-1] - The total number of animation frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
@@ -18,8 +19,11 @@ egame.define("SpriteSheetParser", ["Frame", "FrameData"], function(Frame, FrameD
          * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
          * @return {egame.FrameData} A FrameData object containing the parsed frames.
          */
-        spriteSheet: function(frameWidth, frameHeight, frameMax, margin, spacing) {
-            var img = egame.Caches[this.resourceKey].data;
+        spriteSheet: function(resourceKey,frameWidth, frameHeight, frameMax, margin, spacing) {
+            if (frameMax === undefined) { frameMax = -1; }
+            if (margin === undefined) { margin = 0; }
+            if (spacing === undefined) { spacing = 0; }
+            var img = egame.Caches[resourceKey].data;
             var width = img.width;
             var height = img.height;
             if (frameWidth <= 0) {
@@ -33,7 +37,6 @@ egame.define("SpriteSheetParser", ["Frame", "FrameData"], function(Frame, FrameD
             var row = Math.floor((width - margin) / (frameWidth + spacing));
             var column = Math.floor((height - margin) / (frameHeight + spacing));
             var total = row * column;
-
             if (frameMax !== -1) {
                 total = frameMax;
             }
@@ -60,7 +63,6 @@ egame.define("SpriteSheetParser", ["Frame", "FrameData"], function(Frame, FrameD
                     y += frameHeight + spacing;
                 }
             }
-
             return data;
 
         },

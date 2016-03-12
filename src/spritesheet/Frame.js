@@ -6,12 +6,6 @@ egame.define("Frame", function() {
         return Math.sqrt(dx * dx + dy * dy);
     }
     /**
-     * @author       Richard Davey <rich@photonstorm.com>
-     * @copyright    2015 Photon Storm Ltd.
-     * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-     */
-
-    /**
      * A Frame is a single frame of an animation and is part of a FrameData collection.
      *
      * @class egame.Frame

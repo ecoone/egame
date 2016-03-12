@@ -27,7 +27,7 @@
 </head>
 <body>
     <script type="text/javascript">
-      egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Physics','Arcade_Body','Particles','Emitter','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite,Physics,Body,Particles,Emitter){
+      egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Physics','Arcade_Body','Particles','Emitter','SpriteSheet','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite,Physics,Body,Particles,Emitter,SpriteSheet){
             //创建一个游戏对象
             var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
             game.load =  new Loader(game);
@@ -38,6 +38,7 @@
                     game.physics = new Physics(game);
                     game.load.image("snow","images/snow.png");
                     game.load.image("snowlarge","images/snowlarge.png");
+                    game.load.image("snowflakes","images/snowflakes.png");
                     game.load.image("snowflakes_large","images/snowflakes_large.png");
                     game.load.image("starfield","images/starfield.jpg");
                     game.stage.renderer.backgroundColor = 0x1099bb;
@@ -55,14 +56,15 @@
                 },
                 create:function(){
                     game.stage.renderer.backgroundColor = 0x1099bb;
+                    var back_emitter = new  Emitter(game, game.world.centerX,  -32,600);
+                    //单个精灵的情况
+                    // var snow = new Sprite('snow');
+                    // back_emitter.makeParticles(snow);
+                    
+                    // 精灵表的情况
+                    var snowflakes = new SpriteSheet("snowflakes",17,17);
+                    back_emitter.makeParticles(snowflakes,[0, 1, 2, 3, 4, 5]);
 
-                    var texture = Texture.fromResource('snow');
-                    var texture2 = Texture.fromResource('snowlarge');
-                 
-                    // var back_emitter = new  Emitter(game, game.world.centerX,  -32, 600);
-                    var back_emitter = new  Emitter(game, game.world.centerX,  -32, 300);
-                    // back_emitter.makeParticles('snowflakes', [0, 1, 2, 3, 4, 5]);
-                    back_emitter.makeParticles(texture);
                     back_emitter.maxParticleScale = 0.6;
                     back_emitter.minParticleScale = 0.2;
                     back_emitter.setYSpeed(50, 100);
@@ -72,8 +74,24 @@
                     back_emitter.maxRotation = 40;
                     back_emitter.start(false, 14000, 20);
 
-                    front_emitter = new  Emitter(game,game.world.centerX, -32, 50);
-                    front_emitter.makeParticles(texture2);
+                    var mid_emitter =  new  Emitter(game,game.world.centerX, -32, 250);
+                    mid_emitter.makeParticles(snowflakes, [0, 1, 2, 3, 4, 5]);
+                    mid_emitter.maxParticleScale = 1.2;
+                    mid_emitter.minParticleScale = 0.8;
+                    mid_emitter.setYSpeed(50, 150);
+                    mid_emitter.gravity = 0;
+                    mid_emitter.width = game.world.width * 1.5;
+                    mid_emitter.minRotation = 0;
+                    mid_emitter.maxRotation = 40;
+                    mid_emitter.start(false, 12000, 40);
+
+                    var front_emitter = new  Emitter(game,game.world.centerX, -32, 50);
+                    // var snowlarge = new Sprite('snowlarge');
+                    // front_emitter.makeParticles(snowlarge);
+                    // 精灵表的情况
+                    var snowflakes_large = new SpriteSheet("snowflakes_large",64,64);
+                    front_emitter.makeParticles(snowflakes_large,[0, 1, 2, 3, 4, 5]);
+
                     front_emitter.maxParticleScale = 1;
                     front_emitter.minParticleScale = 0.5;
                     front_emitter.setYSpeed(100, 200);
@@ -86,12 +104,9 @@
             
                 },
                 update:function(){
-                    //两个精灵做碰撞检测
-                    // game.physics.arcade.collide(this.bunny, this.bunny2, this.collideHandler, null, this);
+              
                 },
                 collideHandler:function(){
-                    //碰撞处理
-                    // arguments[0].kill();
                 }
             };
             //启动游戏

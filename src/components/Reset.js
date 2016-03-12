@@ -1,11 +1,4 @@
 egame.define("Reset", ["Component"], function(Component) {
-
-    /**
-     * @author       Richard Davey <rich@photonstorm.com>
-     * @copyright    2015 Photon Storm Ltd.
-     * @license      {@link https://github.com/photonstorm/egame/blob/master/license.txt|MIT License}
-     */
-
     /**
      * The Reset component allows a Game Object to be reset and repositioned to a new location.
      *

@@ -27,7 +27,7 @@ egame.use(['Game', 'Loader', 'Texture', 'Sprite', 'Text', 'Image'], function(Gam
 	var loaddingStatus = {
 		preload: function() {
 			//设置要加载的资源
-			load.image("mniya1", "images/1.jpg");
+			load.image("mniya", "images/1.jpg");
 			//加载资源界面
 			game.stage.renderer.backgroundColor = 0x1099bb;
 			var basicText = new Text('当前进度：0%');
@@ -53,21 +53,21 @@ egame.use(['Game', 'Loader', 'Texture', 'Sprite', 'Text', 'Image'], function(Gam
 			game.stage.backgroundColor = 0x1099bb;
 			//使用图片资源
 			//方式1
-			// var texture = Texture.fromResource('mniya1');
-			// var minya1 = new Sprite(texture);
+			// var texture = Texture.fromResource('mniya');
+			// var mniya = new Sprite(texture);
 			// 方式2
-			var minya1 = new Sprite('mniya1');
-			minya1.anchor.x = 0.5;
-			minya1.anchor.y = 0.5;
-			minya1.scale.x = 0.3;
-			minya1.scale.y = 0.3;
-			minya1.position.x = 200;
-			minya1.position.y = 150;
-			this.minya1 = minya1;
-			this.stage.addChild(minya1);
+			var mniya = new Sprite('mniya');
+			mniya.anchor.x = 0.5;
+			mniya.anchor.y = 0.5;
+			mniya.scale.x = 0.3;
+			mniya.scale.y = 0.3;
+			mniya.position.x = 200;
+			mniya.position.y = 150;
+			this.mniya = mniya;
+			this.stage.addChild(mniya);
 		},
 		update: function() {
-			this.minya1.rotation += 0.1;
+			this.mniya.rotation += 0.1;
 		}
 	};
 	//添加状态并在游戏启动后自动启动

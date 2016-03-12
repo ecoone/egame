@@ -1,11 +1,4 @@
 egame.define("RandomDataGenerator", function() {
-
-    /**
-     * @author       Richard Davey <rich@photonstorm.com>
-     * @copyright    2015 Photon Storm Ltd.
-     * @license      {@link https://github.com/photonstorm/egame/blob/master/license.txt|MIT License}
-     */
-
     /**
      * An extremely useful repeatable random data generator.
      *

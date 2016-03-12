@@ -1,11 +1,5 @@
 egame.define("Physics", function() {
     /**
-     * @author       Richard Davey <rich@photonstorm.com>
-     * @copyright    2015 Photon Storm Ltd.
-     * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-     */
-
-    /**
      * The Physics Manager is responsible for looking after all of the running physics systems.
      * egame supports 4 physics systems: Arcade Physics, P2, Ninja Physics and Box2D via a commercial plugin.
      * 

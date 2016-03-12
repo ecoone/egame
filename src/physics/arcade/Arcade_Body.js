@@ -1,11 +1,4 @@
 egame.define("Arcade_Body", ["Arcade"], function(Arcade) {
-
-    /**
-     * @author       Richard Davey <rich@photonstorm.com>
-     * @copyright    2015 Photon Storm Ltd.
-     * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-     */
-
     /**
      * The Physics Body is linked to a single Sprite. All physics operations should be performed against the body rather than
      * the Sprite itself. For example you can set the velocity, acceleration, bounce values etc all on the Body.

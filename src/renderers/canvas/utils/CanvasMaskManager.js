@@ -4,7 +4,7 @@ var CanvasGraphics = require('./CanvasGraphics');
  * A set of functions used to handle masking.
  *
  * @class
- * @memberof PIXI
+ * @memberof egame
  */
 function CanvasMaskManager()
 {}
@@ -15,7 +15,7 @@ CanvasMaskManager.prototype.constructor = CanvasMaskManager;
  * This method adds it to the current stack of masks.
  *
  * @param maskData {object} the maskData that will be pushed
- * @param renderer {PIXI.WebGLRenderer|PIXI.CanvasRenderer} The renderer context to use.
+ * @param renderer {egame.WebGLRenderer|egame.CanvasRenderer} The renderer context to use.
  */
 CanvasMaskManager.prototype.pushMask = function (maskData, renderer)
 {
@@ -49,7 +49,7 @@ CanvasMaskManager.prototype.pushMask = function (maskData, renderer)
 /**
  * Restores the current drawing context to the state it was before the mask was applied.
  *
- * @param renderer {PIXI.WebGLRenderer|PIXI.CanvasRenderer} The renderer context to use.
+ * @param renderer {egame.WebGLRenderer|egame.CanvasRenderer} The renderer context to use.
  */
 CanvasMaskManager.prototype.popMask = function (renderer)
 {

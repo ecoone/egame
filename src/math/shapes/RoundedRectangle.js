@@ -3,7 +3,7 @@ egame.define("RoundedRectangle",["CONST"],function(CONST) {
  * The Rounded Rectangle object is an area that has nice rounded corners, as indicated by its top-left corner point (x, y) and by its width and its height and its radius.
  *
  * @class
- * @memberof PIXI
+ * @memberof egame
  * @param x {number} The X coordinate of the upper-left corner of the rounded rectangle
  * @param y {number} The Y coordinate of the upper-left corner of the rounded rectangle
  * @param width {number} The overall width of this rounded rectangle
@@ -55,7 +55,7 @@ RoundedRectangle.prototype.constructor = RoundedRectangle;
 /**
  * Creates a clone of this Rounded Rectangle
  *
- * @return {PIXI.RoundedRectangle} a copy of the rounded rectangle
+ * @return {egame.RoundedRectangle} a copy of the rounded rectangle
  */
 RoundedRectangle.prototype.clone = function ()
 {

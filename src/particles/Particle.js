@@ -1,4 +1,4 @@
-egame.define("Particle", ["Sprite","Reset"], function(Sprite,Reset) {
+egame.define("Particle", ["SpriteSheet","Reset"], function(SpriteSheet,Reset) {
 
     /**
      * Create a new `Particle` object. Particles are extended Sprites that are emitted by a particle emitter such as egame.Particles.Arcade.Emitter.
@@ -12,9 +12,12 @@ egame.define("Particle", ["Sprite","Reset"], function(Sprite,Reset) {
      * @param {string|egame.RenderTexture|egame.BitmapData|PIXI.Texture} key - This is the image or texture used by the Particle during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
      * @param {string|number} frame - If this Particle is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
      */
-    egame.Particle = function(game, x, y, texture) {
-
-        egame.Sprite.call(this, texture);
+    egame.Particle = function(game,spriteSheetOrSprite,x,y,frame) {
+        SpriteSheet.call(this, spriteSheetOrSprite.resourceKey?spriteSheetOrSprite.resourceKey:spriteSheetOrSprite.texture);
+        if(spriteSheetOrSprite._frameData){
+            this.copyFrameData(spriteSheetOrSprite._frameData);
+            this.frame = frame;
+        }
         this.position.x = x;
         this.position.y = y;
         this.game = game;
@@ -57,7 +60,7 @@ egame.define("Particle", ["Sprite","Reset"], function(Sprite,Reset) {
 
     };
 
-    egame.Particle.prototype = Object.create(egame.Sprite.prototype);
+    egame.Particle.prototype = Object.create(egame.SpriteSheet.prototype);
     egame.Particle.prototype.constructor = egame.Particle;
 
     /**

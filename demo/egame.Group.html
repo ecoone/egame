@@ -64,35 +64,35 @@
 
                     //使用图片资源
                     var texture = Texture.fromResource('mniya1');
-                    var minya1 = new Sprite(texture);
-                    minya1.anchor.x = 0.5;
-                    minya1.anchor.y = 0.5;
-                    minya1.scale.x =0.3;
-                    minya1.scale.y =0.3;
-                    minya1.position.x = 200;
-                    minya1.position.y = 150;
-                    this.minya1 = minya1;
-                    // this.stage.addChild(minya1);
+                    var mniya = new Sprite(texture);
+                    mniya.anchor.x = 0.5;
+                    mniya.anchor.y = 0.5;
+                    mniya.scale.x =0.3;
+                    mniya.scale.y =0.3;
+                    mniya.position.x = 200;
+                    mniya.position.y = 150;
+                    this.mniya = mniya;
+                    // this.stage.addChild(mniya);
 
                     var texture2 = Texture.fromResource('mniya2');
-                    var minya2 = new Sprite(texture2);
-                    minya2.anchor.x = 0.5;
-                    minya2.anchor.y = 0.5;
-                    minya2.scale.x =0.3;
-                    minya2.scale.y =0.3;
-                    minya2.position.x = 200;
-                    minya2.position.y = 150;
-                    this.minya2 = minya2;
-                    // this.stage.addChild(minya2);
+                    var mniya2 = new Sprite(texture2);
+                    mniya2.anchor.x = 0.5;
+                    mniya2.anchor.y = 0.5;
+                    mniya2.scale.x =0.3;
+                    mniya2.scale.y =0.3;
+                    mniya2.position.x = 200;
+                    mniya2.position.y = 150;
+                    this.mniya2 = mniya2;
+                    // this.stage.addChild(mniya2);
                     
                     var group = new Group(game,null,null,true);
-                    group.add(minya1);
-                    group.add(minya2);
-                    group.swap(minya1,minya2);
+                    group.add(mniya);
+                    group.add(mniya2);
+                    group.swap(mniya,mniya2);
 
                 },
                 update:function(){
-                     // this.minya1.rotation += 0.1;
+                     // this.mniya.rotation += 0.1;
                 }
             };
 

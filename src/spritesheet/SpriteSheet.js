@@ -4,7 +4,9 @@ egame.define("SpriteSheet", ["SpriteSheetParser", "Sprite"], function(SpriteShee
         //用于存储所有帧数据
         this._frameData = null;
         Sprite.call(this, imgResourceKey);
-        this.spriteSheetConfig(frameWidthOrSpriteSheetKey, frameHeight, frameMax, margin, spacing);
+        if(frameWidthOrSpriteSheetKey){
+            this.spriteSheetConfig(frameWidthOrSpriteSheetKey, frameHeight, frameMax, margin, spacing);
+        }
     }
     SpriteSheet.prototype = Object.create(Sprite.prototype);
     SpriteSheet.prototype.constructor = SpriteSheet;
@@ -26,7 +28,7 @@ egame.define("SpriteSheet", ["SpriteSheetParser", "Sprite"], function(SpriteShee
                     frameData = SpriteSheetParser.JSONDataHash(json);
                 }
             } else {
-                frameData = SpriteSheetParser.spriteSheet(frameWidthOrSpriteSheetKey, frameHeight, frameMax, margin, spacing);
+                frameData = SpriteSheetParser.spriteSheet(this.resourceKey,frameWidthOrSpriteSheetKey, frameHeight, frameMax, margin, spacing);
             }
             this.loadFrameData(frameData);
         },
@@ -223,7 +225,7 @@ egame.define("SpriteSheet", ["SpriteSheetParser", "Sprite"], function(SpriteShee
                 if (this.currentFrame) {
                     this._frameIndex = this.currentFrame.index;
 
-                    this.sprite.setSourceFrame(this.currentFrame);
+                    this.setSourceFrame(this.currentFrame);
                 }
             } else {
                 console.warn('Cannot set frameName: ' + value);

@@ -5,8 +5,8 @@ egame.define("Graphics",["Container","Texture","CanvasBuffer","CanvasGraphics","
  * rectangles to the display, and to color and fill them.
  *
  * @class
- * @extends PIXI.Container
- * @memberof PIXI
+ * @extends egame.Container
+ * @memberof egame
  */
 function Graphics()
 {
@@ -39,7 +39,7 @@ function Graphics()
     /**
      * Graphics data
      *
-     * @member {PIXI.GraphicsData[]}
+     * @member {egame.GraphicsData[]}
      * @private
      */
     this.graphicsData = [];
@@ -62,18 +62,18 @@ function Graphics()
     this._prevTint = 0xFFFFFF;
 
     /**
-     * The blend mode to be applied to the graphic shape. Apply a value of `PIXI.BLEND_MODES.NORMAL` to reset the blend mode.
+     * The blend mode to be applied to the graphic shape. Apply a value of `egame.BLEND_MODES.NORMAL` to reset the blend mode.
      *
      * @member {number}
-     * @default PIXI.BLEND_MODES.NORMAL;
-     * @see PIXI.BLEND_MODES
+     * @default egame.BLEND_MODES.NORMAL;
+     * @see egame.BLEND_MODES
      */
     this.blendMode = CONST.BLEND_MODES.NORMAL;
 
     /**
      * Current path
      *
-     * @member {PIXI.GraphicsData}
+     * @member {egame.GraphicsData}
      * @private
      */
     this.currentPath = null;
@@ -104,7 +104,7 @@ function Graphics()
     /**
      * A cache of the local bounds to prevent recalculation.
      *
-     * @member {PIXI.Rectangle}
+     * @member {egame.Rectangle}
      * @private
      */
     this._localBounds = new Rectangle(0,0,1,1);
@@ -146,7 +146,7 @@ function Graphics()
      *
      * @name cacheAsBitmap
      * @member {boolean}
-     * @memberof PIXI.Graphics#
+     * @memberof egame.Graphics#
      * @default false
      */
 }
@@ -159,7 +159,7 @@ Graphics.prototype.constructor = Graphics;
  * Creates a new Graphics object with the same values as this one.
  * Note that the only the properties of the object are cloned, not its transform (position,scale,etc)
  *
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.clone = function ()
 {
@@ -196,7 +196,7 @@ Graphics.prototype.clone = function ()
  * @param lineWidth {number} width of the line to draw, will update the objects stored style
  * @param color {number} color of the line to draw, will update the objects stored style
  * @param alpha {number} alpha of the line to draw, will update the objects stored style
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.lineStyle = function (lineWidth, color, alpha)
 {
@@ -230,7 +230,7 @@ Graphics.prototype.lineStyle = function (lineWidth, color, alpha)
  *
  * @param x {number} the X coordinate to move to
  * @param y {number} the Y coordinate to move to
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
   */
 Graphics.prototype.moveTo = function (x, y)
 {
@@ -247,7 +247,7 @@ Graphics.prototype.moveTo = function (x, y)
  *
  * @param x {number} the X coordinate to draw to
  * @param y {number} the Y coordinate to draw to
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.lineTo = function (x, y)
 {
@@ -265,7 +265,7 @@ Graphics.prototype.lineTo = function (x, y)
  * @param cpY {number} Control point y
  * @param toX {number} Destination point x
  * @param toY {number} Destination point y
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.quadraticCurveTo = function (cpX, cpY, toX, toY)
 {
@@ -320,7 +320,7 @@ Graphics.prototype.quadraticCurveTo = function (cpX, cpY, toX, toY)
  * @param cpY2 {number} Second Control point y
  * @param toX {number} Destination point x
  * @param toY {number} Destination point y
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.bezierCurveTo = function (cpX, cpY, cpX2, cpY2, toX, toY)
 {
@@ -379,7 +379,7 @@ Graphics.prototype.bezierCurveTo = function (cpX, cpY, cpX2, cpY2, toX, toY)
  * @param x2 {number} The x-coordinate of the end of the arc
  * @param y2 {number} The y-coordinate of the end of the arc
  * @param radius {number} The radius of the arc
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.arcTo = function (x1, y1, x2, y2, radius)
 {
@@ -446,7 +446,7 @@ Graphics.prototype.arcTo = function (x1, y1, x2, y2, radius)
  * @param startAngle {number} The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
  * @param endAngle {number} The ending angle, in radians
  * @param anticlockwise {boolean} Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, anticlockwise)
 {
@@ -523,7 +523,7 @@ Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, anticloc
  *
  * @param color {number} the color of the fill
  * @param alpha {number} the alpha of the fill
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.beginFill = function (color, alpha)
 {
@@ -563,7 +563,7 @@ Graphics.prototype.endFill = function ()
  * @param y {number} The Y coord of the top-left of the rectangle
  * @param width {number} The width of the rectangle
  * @param height {number} The height of the rectangle
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.drawRect = function ( x, y, width, height )
 {
@@ -579,7 +579,7 @@ Graphics.prototype.drawRect = function ( x, y, width, height )
  * @param width {number} The width of the rectangle
  * @param height {number} The height of the rectangle
  * @param radius {number} Radius of the rectangle corners
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.drawRoundedRect = function ( x, y, width, height, radius )
 {
@@ -594,7 +594,7 @@ Graphics.prototype.drawRoundedRect = function ( x, y, width, height, radius )
  * @param x {number} The X coordinate of the center of the circle
  * @param y {number} The Y coordinate of the center of the circle
  * @param radius {number} The radius of the circle
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.drawCircle = function (x, y, radius)
 {
@@ -610,7 +610,7 @@ Graphics.prototype.drawCircle = function (x, y, radius)
  * @param y {number} The Y coordinate of the center of the ellipse
  * @param width {number} The half width of the ellipse
  * @param height {number} The half height of the ellipse
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.drawEllipse = function (x, y, width, height)
 {
@@ -622,8 +622,8 @@ Graphics.prototype.drawEllipse = function (x, y, width, height)
 /**
  * Draws a polygon using the given path.
  *
- * @param path {number[]|PIXI.Point[]} The path data used to construct the polygon.
- * @return {PIXI.Graphics}
+ * @param path {number[]|egame.Point[]} The path data used to construct the polygon.
+ * @return {egame.Graphics}
  */
 Graphics.prototype.drawPolygon = function (path)
 {
@@ -662,7 +662,7 @@ Graphics.prototype.drawPolygon = function (path)
 /**
  * Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
  *
- * @return {PIXI.Graphics}
+ * @return {egame.Graphics}
  */
 Graphics.prototype.clear = function ()
 {
@@ -682,7 +682,7 @@ Graphics.prototype.clear = function ()
  *
  * @param resolution {number} The resolution of the texture being generated
  * @param scaleMode {number} Should be one of the scaleMode consts
- * @return {PIXI.Texture} a texture of the graphics object
+ * @return {egame.Texture} a texture of the graphics object
  */
 Graphics.prototype.generateTexture = function (renderer, resolution, scaleMode)
 {
@@ -708,7 +708,7 @@ Graphics.prototype.generateTexture = function (renderer, resolution, scaleMode)
 /**
  * Renders the object using the WebGL renderer
  *
- * @param renderer {PIXI.WebGLRenderer}
+ * @param renderer {egame.WebGLRenderer}
  * @private
  */
 Graphics.prototype._renderWebGL = function (renderer)
@@ -754,7 +754,7 @@ Graphics.prototype._renderWebGL = function (renderer)
 /**
  * Renders the object using the Canvas renderer
  *
- * @param renderer {PIXI.CanvasRenderer}
+ * @param renderer {egame.CanvasRenderer}
  * @private
  */
 Graphics.prototype._renderCanvas = function (renderer)
@@ -817,9 +817,9 @@ Graphics.prototype._renderCanvas = function (renderer)
 /**
  * Retrieves the bounds of the graphic shape as a rectangle object
  *
- * @param [matrix] {PIXI.Matrix} The world transform matrix to use, defaults to this
+ * @param [matrix] {egame.Matrix} The world transform matrix to use, defaults to this
  *  object's worldTransform.
- * @return {PIXI.Rectangle} the rectangular bounding area
+ * @return {egame.Rectangle} the rectangular bounding area
  */
 Graphics.prototype.getBounds = function (matrix)
 {
@@ -907,7 +907,7 @@ Graphics.prototype.getBounds = function (matrix)
 /**
 * Tests if a point is inside this graphics object
 *
-* @param point {PIXI.Point} the point to test
+* @param point {egame.Point} the point to test
 * @return {boolean} the result of the test
 */
 Graphics.prototype.containsPoint = function( point )
@@ -1118,8 +1118,8 @@ Graphics.prototype.destroyCachedSprite = function ()
 /**
  * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
  *
- * @param shape {PIXI.Circle|PIXI.Rectangle|PIXI.Ellipse|PIXI.Line|PIXI.Polygon} The shape object to draw.
- * @return {PIXI.GraphicsData} The generated GraphicsData object.
+ * @param shape {egame.Circle|egame.Rectangle|egame.Ellipse|egame.Line|egame.Polygon} The shape object to draw.
+ * @return {egame.GraphicsData} The generated GraphicsData object.
  */
 Graphics.prototype.drawShape = function (shape)
 {

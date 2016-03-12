@@ -4,7 +4,7 @@ egame.define("Point", function() {
      * the horizontal axis and y represents the vertical axis.
      *
      * @class
-     * @memberof PIXI
+     * @memberof egame
      * @param [x=0] {number} position of the point on the x axis
      * @param [y=0] {number} position of the point on the y axis
      */
@@ -28,7 +28,7 @@ egame.define("Point", function() {
     /**
      * Creates a clone of this point
      *
-     * @return {PIXI.Point} a copy of the point
+     * @return {egame.Point} a copy of the point
      */
     Point.prototype.clone = function ()
     {
@@ -38,7 +38,7 @@ egame.define("Point", function() {
     /**
      * Copies x and y from the given point
      *
-     * @param p {PIXI.Point}
+     * @param p {egame.Point}
      */
     Point.prototype.copy = Point.prototype.copyFrom = function (p) {
         this.set(p.x, p.y);
@@ -62,7 +62,7 @@ egame.define("Point", function() {
     /**
      * Returns true if the given point is equal to this point
      *
-     * @param p {PIXI.Point}
+     * @param p {egame.Point}
      * @returns {boolean}
      */
     Point.prototype.equals = function (p) {

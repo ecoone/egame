@@ -329,14 +329,14 @@ egame.define("Emitter", ["Particles", "CONST", "Group", "RandomDataGenerator", "
      * The particles are stored internally waiting to be emitted via Emitter.start.
      *
      * @method egame.Particles.Arcade.Emitter#makeParticles
-     * @param {array|string} keys - A string or an array of strings that the particle sprites will use as their texture. If an array one is picked at random.
+     * @param {array|string} spriteSheets - A string or an array of strings that the particle sprites will use as their texture. If an array one is picked at random.
      * @param {array|number} [frames=0] - A frame number, or array of frames that the sprite will use. If an array one is picked at random.
      * @param {number} [quantity] - The number of particles to generate. If not given it will use the value of Emitter.maxParticles. If the value is greater than Emitter.maxParticles it will use Emitter.maxParticles as the quantity.
      * @param {boolean} [collide=false] - If you want the particles to be able to collide with other Arcade Physics bodies then set this to true.
      * @param {boolean} [collideWorldBounds=false] - A particle can be set to collide against the World bounds automatically and rebound back into the World if this is set to true. Otherwise it will leave the World.
      * @return {egame.Particles.Arcade.Emitter} This Emitter instance.
      */
-    egame.Particles.Arcade.Emitter.prototype.makeParticles = function(keys, frames, quantity, collide, collideWorldBounds) {
+    egame.Particles.Arcade.Emitter.prototype.makeParticles = function(spriteSheets, frames, quantity, collide, collideWorldBounds) {
 
         if (frames === undefined) {
             frames = 0;
@@ -353,7 +353,7 @@ egame.define("Emitter", ["Particles", "CONST", "Group", "RandomDataGenerator", "
 
         var particle;
         var i = 0;
-        var rndKey = keys;
+        var rndSpriteSheet = spriteSheets;
         var rndFrame = frames;
         this._frames = frames;
 
@@ -362,16 +362,14 @@ egame.define("Emitter", ["Particles", "CONST", "Group", "RandomDataGenerator", "
         }
 
         while (i < quantity) {
-            if (Array.isArray(keys)) {
-                rndKey = this.game.rnd.pick(keys);
+            if (Array.isArray(spriteSheets)) {
+                rndSpriteSheet = this.game.rnd.pick(spriteSheets);
             }
 
             if (Array.isArray(frames)) {
                 rndFrame = this.game.rnd.pick(frames);
             }
-
-            // particle = new this.particleClass(this.game, 0, 0, rndKey, rndFrame);
-            particle = new this.particleClass(this.game, 0, 0,keys); //add by NIU
+            particle = new this.particleClass(this.game,rndSpriteSheet,0,0,rndFrame);
             this.game.physics.arcade.enable(particle, false);
 
             if (collide) {
@@ -629,15 +627,8 @@ egame.define("Emitter", ["Particles", "CONST", "Group", "RandomDataGenerator", "
         body.velocity.y = rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
         body.angularVelocity = rnd.between(this.minRotation, this.maxRotation);
         body.gravity.y = this.gravity;
-        // console.log(4444)
-        console.log(body.velocity)
         body.angularDrag = this.angularDrag;
         particle.onEmit();
-        if(!window.j){
-            console.log(particle);
-            window.particle = particle;
-            window.j = 1;
-        }
         return true;
 
     };
@@ -970,5 +961,5 @@ egame.define("Emitter", ["Particles", "CONST", "Group", "RandomDataGenerator", "
         }
 
     });
-    return  egame.Particles.Arcade.Emitter;
+    return egame.Particles.Arcade.Emitter;
 });

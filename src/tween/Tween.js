@@ -1,11 +1,5 @@
 egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
     /**
-     * @author       Richard Davey <rich@photonstorm.com>
-     * @copyright    2015 Photon Storm Ltd.
-     * @license      {@link https://github.com/photonstorm/egame/blob/master/license.txt|MIT License}
-     */
-
-    /**
      * A Tween allows you to alter one or more properties of a target object over a defined period of time.
      * This can be used for things such as alpha fading Sprites, scaling them or motion.
      * Use `Tween.to` or `Tween.from` to set-up the tween values. You can create multiple tweens on the same object

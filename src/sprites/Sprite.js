@@ -74,11 +74,11 @@ function Sprite(textureOrResourceKey)
         //资源名称
         this.resourceKey = textureOrResourceKey;
         //精灵纹理
-        this.texture = Texture.fromResource(textureOrResourceKey);
+        this.texture = Texture.fromResource(textureOrResourceKey).clone();
     }else if(egame.util.isObject(textureOrResourceKey)){
         this.texture = textureOrResourceKey;
     }else{
-        this.texture = Texture.EMPTY;
+        this.texture = Texture.EMPTY.clone();
     }
     // 设置纹理
 

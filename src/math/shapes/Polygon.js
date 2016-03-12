@@ -2,10 +2,10 @@
 egame.define("Polygon",["CONST","Point"],function(CONST,Point) {
 /**
  * @class
- * @memberof PIXI
- * @param points {PIXI.Point[]|number[]|...PIXI.Point|...number} This can be an array of Points that form the polygon,
+ * @memberof egame
+ * @param points {egame.Point[]|number[]|...egame.Point|...number} This can be an array of Points that form the polygon,
  *      a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
- *      all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
+ *      all the points of the polygon e.g. `new egame.Polygon(new egame.Point(), new egame.Point(), ...)`, or the
  *      arguments passed can be flat x,y values e.g. `new Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
  *      Numbers.
  */
@@ -61,7 +61,7 @@ Polygon.prototype.constructor = Polygon;
 /**
  * Creates a clone of this polygon
  *
- * @return {PIXI.Polygon} a copy of the polygon
+ * @return {egame.Polygon} a copy of the polygon
  */
 Polygon.prototype.clone = function ()
 {

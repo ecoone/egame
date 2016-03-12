@@ -19,12 +19,6 @@ egame.define("TweenData", function() {
         }
     };
     /**
-     * @author       Richard Davey <rich@photonstorm.com>
-     * @copyright    2015 Photon Storm Ltd.
-     * @license      {@link https://github.com/photonstorm/egame/blob/master/license.txt|MIT License}
-     */
-
-    /**
      * A egame.Tween contains at least one TweenData object. It contains all of the tween data values, such as the
      * starting and ending values, the ease function, interpolation and duration. The Tween acts as a timeline manager for
      * TweenData objects and can contain multiple TweenData objects.
