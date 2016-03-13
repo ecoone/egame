@@ -27,8 +27,7 @@ egame.define("Emitter", ["Particles", "CONST", "Group", "RandomDataGenerator", "
          */
         this.maxParticles = maxParticles || 50;
 
-        // egame.Group.call(this, game);
-        egame.Group.call(this, game, null, null, true);
+        egame.Group.call(this, game);
 
         game.rnd = new RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 

@@ -1,31 +1,25 @@
-egame.define("Group",["Container"],function(Container) {
+egame.define("Group",["Container","EventEmitter"],function(Container,EventEmitter) {
     /**
      * Group是一个容器用来包含图片或者精灵
      * Groups是显示场景图型的逻辑树当局部变换被应用到Groups也同时应该到了Group的child.
      * 例如，当group移动旋转缩放的时候，所有的孩子也会跟着移动缩放旋转
      * 另外Groups提供快速池和对象回收机制
      * Groups也是显示对象可以做其他Groups的孩子。
-     * 
+     * 触发的事件有destroyed
      * @class egame.Group
      * @extends egame.Container
      * @param {egame.Game} game - 游戏对象引用
      * @param {DisplayObject|null} [parent=(game world)] - group会被添加到的祖先
      *     如果undefined/未设置Group会被添加到游戏世界; 如果是null被会被添加到任何父元素
-     * @param {string} [name='group'] -group的名字
-     * @param {boolean} [addToStage=false] - 如果是group会被添加到舞台，而不是world
      * @param {boolean} [enableBody=false] - 如果是true有物理刚体效果
      * @param {integer} [physicsBodyType=0] -物理刚体类型
      */
-    egame.Group = function(game, parent, name, addToStage, enableBody, physicsBodyType) {
-
-        if (addToStage === undefined) {
-            addToStage = false;
-        }
+    egame.Group = function(game, parent, enableBody, physicsBodyType) {
         if (enableBody === undefined) {
             enableBody = false;
         }
         if (physicsBodyType === undefined) {
-            // physicsBodyType = egame.Physics.ARCADE;
+            physicsBodyType = 0;
         }
 
         /**
@@ -35,15 +29,9 @@ egame.define("Group",["Container"],function(Container) {
          */
         this.game = game;
 
-        if (parent === undefined) {
-            parent = game.world;
+        if (!parent) {
+            parent = game.stage;
         }
-
-        /**
-         * group的名字
-         * @property {string} name
-         */
-        this.name = name || 'group';
 
         /**
          * z坐标
@@ -55,15 +43,8 @@ egame.define("Group",["Container"],function(Container) {
 
         egame.Container.call(this);
 
-        if (addToStage) {
-            this.game.stage.addChild(this);
-            this.z = this.game.stage.children.length;
-        } else {
-            if (parent) {
-                parent.addChild(this);
-                this.z = parent.children.length;
-            }
-        }
+        parent.addChild(this);
+        this.z = parent.children.length;
 
         /**
          * 类型
@@ -170,12 +151,6 @@ egame.define("Group",["Container"],function(Container) {
         this.physicsSortDirection = null;
 
         /**
-         * This signal is dispatched when the group is destroyed.
-         * @property {egame.Signal} onDestroy
-         */
-        this.onDestroy = new egame.Signal();
-
-        /**
          * @property {integer} cursorIndex - 群游标的当前索引，通过Group.next向前移动
          * @readOnly
          */
@@ -278,15 +253,14 @@ egame.define("Group",["Container"],function(Container) {
             this.addChild(child);
 
             child.z = this.children.length;
-
-            if (this.enableBody && child.body === null) {
+            if (this.enableBody && !child.body) {
                 this.game.physics.enable(child, this.physicsBodyType);
             } else if (child.body) {
                 this.addToHash(child);
             }
 
-            if (!silent && child.events) {
-                child.events.onAddedToGroup$dispatch(child, this);
+            if (!silent) {
+                child.emit("addedToGroup",this);
             }
 
             if (this.cursor === null) {
@@ -380,8 +354,8 @@ egame.define("Group",["Container"],function(Container) {
                 this.addToHash(child);
             }
 
-            if (!silent && child.events) {
-                child.events.onAddedToGroup$dispatch(child, this);
+            if (!silent) {
+                child.emit("addedToGroup",this);
             }
 
             if (this.cursor === null) {
@@ -440,10 +414,7 @@ egame.define("Group",["Container"],function(Container) {
             this.game.physics.enable(child, this.physicsBodyType, this.enableBodyDebug);
         }
 
-        if (child.events) {
-            child.events.onAddedToGroup$dispatch(child, this);
-        }
-
+        child.emit("addedToGroup",this);
         if (this.cursor === null) {
             this.cursor = child;
         }
@@ -1884,8 +1855,8 @@ egame.define("Group",["Container"],function(Container) {
             return false;
         }
 
-        if (!silent && child.events && !child.destroyPhase) {
-            child.events.onRemovedFromGroup$dispatch(child, this);
+        if (!silent  && !child.destroyPhase) {
+            child.emit("removedFromGroup",this);
         }
 
         var removed = this.removeChild(child);
@@ -1952,8 +1923,8 @@ egame.define("Group",["Container"],function(Container) {
         }
 
         do {
-            if (!silent && this.children[0].events) {
-                this.children[0].events.onRemovedFromGroup$dispatch(this.children[0], this);
+            if (!silent) {
+                this.children[0].emit("removedFromGroup",this);
             }
 
             var removed = this.removeChild(this.children[0]);
@@ -2004,8 +1975,8 @@ egame.define("Group",["Container"],function(Container) {
         var i = endIndex;
 
         while (i >= startIndex) {
-            if (!silent && this.children[i].events) {
-                this.children[i].events.onRemovedFromGroup$dispatch(this.children[i], this);
+            if (!silent) {
+                this.children[i].emit("removedFromGroup",this);
             }
 
             var removed = this.removeChild(this.children[i]);
@@ -2049,8 +2020,7 @@ egame.define("Group",["Container"],function(Container) {
             soft = false;
         }
 
-        this.onDestroy.dispatch(this, destroyChildren, soft);
-
+        this.emit("destroyed",this,destroyChildren, soft);
         this.removeAll(destroyChildren);
 
         this.cursor = null;

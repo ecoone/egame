@@ -5,7 +5,7 @@
  * @constructor
  * @param {egame.Game} game - 当前引用的游戏对象
  */
-egame.define("Stage",["Container","CanvasRenderer","CONST"],function(Container,CanvasRenderer,CONST) {
+egame.define("Stage", ["Container", "CanvasRenderer", "CONST"], function(Container, CanvasRenderer, CONST) {
     egame.Stage = function(game) {
 
         Container.call(this);
@@ -17,7 +17,7 @@ egame.define("Stage",["Container","CanvasRenderer","CONST"],function(Container,C
         /**
          * @property {egame.CanvasRenderer} renderer 舞台渲染器
          */
-        this.renderer = new CanvasRenderer(game.width,game.height);
+        this.renderer = new CanvasRenderer(game.width, game.height);
 
         /**
          * @property {CanvasElement} canvas元素
@@ -29,13 +29,14 @@ egame.define("Stage",["Container","CanvasRenderer","CONST"],function(Container,C
          */
         this.context = this.renderer.context;
 
+        this.exists = true;
 
         //重写addChild
-        this._oldAddChild = this.addChild; 
+        this._oldAddChild = this.addChild;
 
-        this.addChild = function(child){
-           child.game = this.game;
-           this._oldAddChild(child);
+        this.addChild = function(child) {
+            child.game = this.game;
+            this._oldAddChild(child);
         }
 
         //舞台缩放模式
@@ -61,6 +62,33 @@ egame.define("Stage",["Container","CanvasRenderer","CONST"],function(Container,C
     egame.Stage.prototype.constructor = egame.Stage;
 
     /**
+     * 游戏循环前面更新
+     *
+     * @method egame.Stage#preUpdate
+     */
+    egame.Stage.prototype.preUpdate = function() {
+
+        for (var i = 0; i < this.children.length; i++) {
+            this.children[i].preUpdate();
+        }
+
+    };
+
+    /**
+     * 舞台更新游戏对象
+     *
+     * @method egame.Stage#update
+     */
+    egame.Stage.prototype.update = function() {
+
+        var i = this.children.length;
+
+        while (i--) {
+            this.children[i].update();
+        }
+
+    };
+    /**
      * 这个在渲染之前调用，在插件更新之后。
      * 在物理计算和对象位置发生
      * 对象按照显示对象的顺序处理
@@ -70,7 +98,7 @@ egame.define("Stage",["Container","CanvasRenderer","CONST"],function(Container,C
     egame.Stage.prototype.postUpdate = function() {
 
         if (this.game.world.camera.target) {
-            if(this.game.world.camera.target.postUpdate) this.game.world.camera.target.postUpdate();
+            if (this.game.world.camera.target.postUpdate) this.game.world.camera.target.postUpdate();
 
             this.game.world.camera.update();
 
@@ -78,7 +106,7 @@ egame.define("Stage",["Container","CanvasRenderer","CONST"],function(Container,C
 
             while (i--) {
                 if (this.children[i] !== this.game.world.camera.target) {
-                    if(this.children[i].postUpdate) this.children[i].postUpdate();
+                    if (this.children[i].postUpdate) this.children[i].postUpdate();
                 }
             }
         } else {
@@ -87,7 +115,7 @@ egame.define("Stage",["Container","CanvasRenderer","CONST"],function(Container,C
             var i = this.children.length;
 
             while (i--) {
-                if(this.children[i].postUpdate) this.children[i].postUpdate();
+                if (this.children[i].postUpdate) this.children[i].postUpdate();
             }
         }
     };
@@ -109,24 +137,25 @@ egame.define("Stage",["Container","CanvasRenderer","CONST"],function(Container,C
 
         function parseHexString(hex, c) {
             var l;
-            if (hex.length === 7){
-                l=2;
-            } else if (hex.length === 4){
-                l=1;
+            if (hex.length === 7) {
+                l = 2;
+            } else if (hex.length === 4) {
+                l = 1;
             } else {
-                c =[255,255,255];
+                c = [255, 255, 255];
             }
             c[0] = parseInt(hex.substr(1, l), 16);
-            c[1] = parseInt(hex.substr(1+l, l), 16);
-            c[2] = parseInt(hex.substr(1+2*l, l), 16);
+            c[1] = parseInt(hex.substr(1 + l, l), 16);
+            c[2] = parseInt(hex.substr(1 + 2 * l, l), 16);
             return c;
         }
 
         var rgb_regex = /rgba?\s*\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,?\s*([0-9.]+)?\)/;
+
         function parseRgbString(rgb, c) {
             var values = rgb_regex.exec(rgb);
-            if( values===null || (values.length != 4 && values.length != 5)) {
-                c=[255,255,255];       
+            if (values === null || (values.length != 4 && values.length != 5)) {
+                c = [255, 255, 255];
             }
             c[0] = Math.round(parseFloat(values[1]));
             c[1] = Math.round(parseFloat(values[2]));
@@ -138,20 +167,20 @@ egame.define("Stage",["Container","CanvasRenderer","CONST"],function(Container,C
         }
 
         //将rgb转化为十六进制
-        function rgbToHex(c){
-         return ((c[0] << 16) + (c[1] << 8) + c[2]);
+        function rgbToHex(c) {
+            return ((c[0] << 16) + (c[1] << 8) + c[2]);
         }
 
         var hexValue = color;
         //#RRGGBB 
-       if (color[0] === '#'){
+        if (color[0] === '#') {
             parseHexString(color, c);
             hexValue = rgbToHex(c);
-        //rgb(r,g,b)
-        } else if (color[0] === 'r' && color[1] === 'g' && color[2] === 'b'){
+            //rgb(r,g,b)
+        } else if (color[0] === 'r' && color[1] === 'g' && color[2] === 'b') {
             parseRgbString(color, c);
             hexValue = rgbToHex(c);
-        } 
+        }
 
         this.renderer.backgroundColor = hexValue;
     };

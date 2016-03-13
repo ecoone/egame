@@ -1,9 +1,9 @@
 /**
  * 游戏对象
  */
-egame.define("Game",["RequestAnimationFrame","Signal","StateManager","Time","Stage","World"],function(RequestAnimationFrame,Signal,StateManager,Time,Stage,World){
+egame.define("Game",["RequestAnimationFrame","EventEmitter","StateManager","Time","Stage","World"],function(RequestAnimationFrame,EventEmitter,StateManager,Time,Stage,World){
     egame.Game = function(width,height,parent,scaleMode,state){
-
+    	EventEmitter.call(this);
         this.width = width||640;
         this.height= height||1136;
         //父容器
@@ -42,7 +42,8 @@ egame.define("Game",["RequestAnimationFrame","Signal","StateManager","Time","Sta
     	FIXED_HEIGHT:3,
     	FULL_PAGE:4
     };
-    egame.Game.prototype = {
+    egame.Game.prototype = Object.create(EventEmitter.prototype);
+    egame.util.extend(egame.Game.prototype,{
 	    update: function (time) {
 	    	this.time.update(time);
 
@@ -64,7 +65,7 @@ egame.define("Game",["RequestAnimationFrame","Signal","StateManager","Time","Sta
 	                this._nextFpsNotification = this.time.time + 10000;
 
 	                //发送警告
-	                this.fpsProblemNotifier.dispatch();
+	                this.emit("fpsProblemNotifier");
 	            }
 
 	            //2. 重置_deltaTime，这将导致所有没有执行的逻辑更新跳过
@@ -176,8 +177,6 @@ egame.define("Game",["RequestAnimationFrame","Signal","StateManager","Time","Sta
 	            return;
 	        }
 	       	if(statusName) this.state.start(statusName);
-		    this.onPause = new Signal();
-	        this.onResume = new Signal();
 	        this.isBooted = true;
 	        this.stage = new Stage(this);
 	        this.world = new World(this);
@@ -201,7 +200,7 @@ egame.define("Game",["RequestAnimationFrame","Signal","StateManager","Time","Sta
 	        {
 	            this._paused = true;
 	            this.time.gamePaused();
-	            this.onPause.dispatch();
+	            this.emit("paused");
 	        }
 
 	    },
@@ -214,11 +213,11 @@ egame.define("Game",["RequestAnimationFrame","Signal","StateManager","Time","Sta
 	        {
 	            this._paused = false;
 	            this.time.gameResumed();
-	            this.onResume.dispatch(event);
+	            this.emit("resumed",event);
 	        }
 
 	    }
-	};
+	});
 
 	/**
 	* @name Phaser.Game#paused

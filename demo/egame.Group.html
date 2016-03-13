@@ -46,14 +46,14 @@
 
                     //资源加载状态捕获
                     //加载资源完成时候调用
-                    game.load.onResourceComplete.add(function(){
+                    game.load.on("resourceCompleted",function(){
                         basicText.text ='当前进度：'+game.load.progress+'%' ;
                     });
-                    game.load.onResourceError.add(function(resourceKey){
+                    game.load.on("resourceErrored",function(resourceKey){
                         alert("资源"+resourceKey+"加载失败");
                     });
                     // 所有加载资源完成时候调用
-                    game.load.onLoadComplete.add(function(){
+                    game.load.on("loadCompleted",function(){
                         basicText.text ='当前进度：'+game.load.progress+'%' ;
                         game.stage.removeChildren();
                     });
@@ -72,7 +72,6 @@
                     mniya.position.x = 200;
                     mniya.position.y = 150;
                     this.mniya = mniya;
-                    // this.stage.addChild(mniya);
 
                     var texture2 = Texture.fromResource('mniya2');
                     var mniya2 = new Sprite(texture2);
@@ -83,16 +82,14 @@
                     mniya2.position.x = 200;
                     mniya2.position.y = 150;
                     this.mniya2 = mniya2;
-                    // this.stage.addChild(mniya2);
                     
-                    var group = new Group(game,null,null,true);
+                    var group = new Group(game);
                     group.add(mniya);
                     group.add(mniya2);
-                    group.swap(mniya,mniya2);
+                    // group.swap(mniya,mniya2);
 
                 },
                 update:function(){
-                     // this.mniya.rotation += 0.1;
                 }
             };
 

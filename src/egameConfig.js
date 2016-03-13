@@ -9,7 +9,6 @@ egame.config({
 	modules:{
 		"Game":'core/Game.js',  //核心部分
 		"RequestAnimationFrame":'core/RequestAnimationFrame.js',
-		"Signal":'core/Signal.js',
 		"Time":'core/Time.js',
 		"StateManager":'core/StateManager.js',
 		"Stage":'core/Stage.js',
@@ -50,7 +49,8 @@ egame.config({
 		"GraphicsData":'graphics/GraphicsData.js',
 		"Graphics":'graphics/Graphics.js',
 		"TilingSprite":'tilingsprite/TilingSprite.js',
-		"Component":'components/Component.js',//显示对象
+		"Component":'components/Component.js',//显示对象组件
+		"Core":'components/Core.js',
 		"FixedToCamera":'components/FixedToCamera.js',
 		"InCamera":'components/InCamera.js',
 		"Overlap":'components/Overlap.js',
@@ -72,7 +72,7 @@ egame.config({
 		"TweenManager":'tween/TweenManager.js',
 		"Physics":'physics/Physics.js',//物理引擎部分
 		"Arcade":'physics/arcade/Arcade.js',
-		"Arcade_Body":'physics/arcade/Arcade_Body.js',
+		"ArcadeBody":'physics/arcade/ArcadeBody.js',
 		"Particle":'particles/Particle.js',//粒子引擎
 		"Particles":'particles/Particles.js',
 		"Emitter":'particles/Emitter.js',

@@ -16,7 +16,6 @@ egame.define("DisplayObject", ["RenderTexture", "Point", "Rectangle", "Matrix", 
          * 相对于这个显示对象父对象的坐标
          */
         this.position = new Point();
-        this.world = new Point();
         /**
          * 显示对象的缩放系数
          */
@@ -102,9 +101,6 @@ egame.define("DisplayObject", ["RenderTexture", "Point", "Rectangle", "Matrix", 
          * @private
          */
         this._mask = null;
-
-        this.exists = true;
-
     }
 
     DisplayObject.prototype = Object.create(EventEmitter.prototype);
@@ -412,63 +408,6 @@ egame.define("DisplayObject", ["RenderTexture", "Point", "Rectangle", "Matrix", 
         this.worldTransform = null;
         this.filterArea = null;
     };
-
-    //用于游戏对象更新
-    DisplayObject.prototype.preUpdate = function() {
-        var parentX = this.parent?this.parent.position.x:0;
-        var parentY = this.parent?this.parent.position.y:0;
-        this.world.setTo(parentX + this.position.x, parentY + this.position.y);
-        //精灵表动画
-        if(this.type==egame.SPRITESHEET_ANIMATION){
-            this.updateAnimation();
-        }
-        //物理引擎更新部分
-        if (this.body)
-        {
-            this.body.preUpdate();
-        }
-        
-        if (this.components&&this.components.LifeSpan)
-        {
-            egame.Component.LifeSpan.preUpdate.call(this);
-        }
-
-        if(this.children&&this.children.length>0){
-            for (var i = 0; i < this.children.length; i++)
-            {
-                this.children[i].preUpdate();
-            }
-        }
-    };
-
-    DisplayObject.prototype.update = function(){
-        if(this.children&&this.children.length>0){
-            for (var i = 0; i < this.children.length; i++)
-            {
-                this.children[i].update();
-            }
-        }
-    };
-
-    DisplayObject.prototype.postUpdate = function() {
-       //物理引擎更新部分
-        if (this.body)
-        {
-            this.body.postUpdate();
-        }
-        if (this.components&&this.components.FixedToCamera)
-        {
-            egame.Component.FixedToCamera.postUpdate.call(this);
-        }
-
-        if(this.children&&this.children.length>0){
-            for (var i = 0; i < this.children.length; i++)
-            {
-                this.children[i].postUpdate();
-            }
-        }
-    };
-
 
     egame.DisplayObject = DisplayObject;
     return DisplayObject;

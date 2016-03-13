@@ -1,10 +1,11 @@
-egame.define(["Time"],function(){
+egame.define("Time",["EventEmitter"],function(EventEmitter){
     /**
      * 游戏时钟
+     * 触发的事件有completed所有计时器事件处理完成时候触发
      */
     egame.Time = function (game) {
-
-        /**
+        EventEmitter.call(this);
+       /**
         * game对象
         */
         this.game = game;
@@ -476,11 +477,6 @@ egame.define(["Time"],function(){
         this.events = [];
 
         /**
-        * 所有计时器事件处理完成时候出发
-        */
-        this.onComplete = new egame.Signal();
-
-        /**
         * 下次计时器事件发生时间
         */
         this.nextTick = 0;
@@ -810,7 +806,7 @@ egame.define(["Time"],function(){
                 else
                 {
                     this.expired = true;
-                    this.onComplete.dispatch(this);
+                    this.emit("completed",this);
                 }
             }
             //如果过期且是自动销毁那么就返回false,这样计时器对象可以在游戏时钟里面销毁
@@ -935,11 +931,10 @@ egame.define(["Time"],function(){
         },
 
         /**
-        * 移除onComplete事件监听和所有的计时器事件
+        * 移除completed事件监听和所有的计时器事件
         */
         removeAll: function () {
-
-            this.onComplete.removeAll();
+            this.off("completed");
             this.events.length = 0;
             this._len = 0;
             this._i = 0;
@@ -947,11 +942,11 @@ egame.define(["Time"],function(){
         },
 
         /**
-        * 销毁计时器对象，所有的计时器事件不会在触发，计时器完成的onComplete方法也不会在出发
+        * 销毁计时器对象，所有的计时器事件不会在触发，计时器完成的completed方法也不会在触发
         */
         destroy: function () {
             //移除所有事件监听
-            this.onComplete.removeAll();
+            this.off("completed");
             this.running = false;
             this.events = [];
             this._len = 0;

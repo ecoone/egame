@@ -22,12 +22,11 @@
     </script>
     <link rel="stylesheet" href="css/reset.css"/>
     <script type="text/javascript" src="../lib/eco.js"></script>
-    <script type="text/javascript" src="../src/egame.js"></script>
     <script type="text/javascript" src="../src/egameConfig.js"></script>
 </head>
 <body>
     <script type="text/javascript">
-      egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Physics','Arcade_Body','Group','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite,Physics,Body,Group){
+      egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Physics','ArcadeBody','Group','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite,Physics,Body,Group){
             //创建一个游戏对象
             var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
             game.load =  new Loader(game);
@@ -44,10 +43,10 @@
                     basicText.y = 100;
                     game.stage.addChild(basicText);
                     //资源加载过程的进度条
-                    game.load.onResourceComplete.add(function(){
+                    game.load.on("resourceCompleted",function(){
                         basicText.text ='当前进度：'+game.load.progress+'%' ;
                     });
-                    game.load.onLoadComplete.add(function(){
+                    game.load.on("loadCompleted",function(){
                             game.stage.removeChild(basicText); 
                     })
                 },
@@ -80,8 +79,8 @@
                     this.tilingSprite = tilingSprite;
                     game.stage.addChild(tilingSprite);
                     game.stage.addChild(bunny);
-
-                    var group = new Group(game,null,null,true);
+                    //方式2
+                    var group = new Group(game,null,true);
                     var texture2 = Texture.fromResource('mniya2');
                     var xStart = 0;
                      for (var i = 0; i < 70; i++)
@@ -96,11 +95,11 @@
                         bunny2.position.y = (y*300)+150;
                         bunny2.scale.x = 0.2;
                         bunny2.scale.y = 0.2;
-                        game.physics.enable(bunny2, egame.Physics.ARCADE);
+                        //方式1
+                        // game.physics.enable(bunny2, egame.Physics.ARCADE);
                         group.add(bunny2);
                         this.group = group;
                     }
-
             
                 },
                 update:function(){

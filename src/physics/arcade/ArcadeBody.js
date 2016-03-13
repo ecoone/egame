@@ -1,4 +1,4 @@
-egame.define("Arcade_Body", ["Arcade"], function(Arcade) {
+egame.define("ArcadeBody", ["Arcade"], function(Arcade) {
     /**
      * The Physics Body is linked to a single Sprite. All physics operations should be performed against the body rather than
      * the Sprite itself. For example you can set the velocity, acceleration, bounce values etc all on the Body.

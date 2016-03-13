@@ -1,10 +1,16 @@
-egame.define("Loader",["Signal"],function(Signal) {
+egame.define("Loader",["EventEmitter"],function(EventEmitter) {
     /**
      * Loader是用来处理外部资源加载，比如图片，音乐，视频，纹理地图和数据文件等。
      * 加载器使用html标签（例如：image标签、XHR并提供加载进度和完成回调
+     * 事件有：
+     * loadStarted：在所有资源开始加载前触发
+     * loadCompleted：所有资源加载完成触发
+     * resourceStarted：资源加载前触发
+     * resourceCompleted：资源加载完成触发，不管是错误还是成功完成
+     * resourceErrored：资源加载错误出发
      */
     egame.Loader = function(game) {
-
+        EventEmitter.call(this);
         /**
          * 引用的游戏对象
          */
@@ -44,32 +50,6 @@ egame.define("Loader",["Signal"],function(Signal) {
          *  path必须以'/结尾'
          */
         this.path = '';
-
-        /**
-         * 在资源开始加载前触发
-         */
-        this.onLoadStart = new egame.Signal();
-
-        /**
-         * 资源加载完成触发
-         */
-        this.onLoadComplete = new egame.Signal();
-
-        /**
-         * 资源加载前触发
-         */
-        this.onResourceStart = new egame.Signal();
-
-        /**
-         * 资源加载完成触发，不管是错误还是成功完成
-         */
-        this.onResourceComplete = new egame.Signal();
-
-        /**
-         * 资源加载错误出发
-         */
-        this.onResourceError = new egame.Signal();
-
         /**
          * 是否允许并行下载
          * 在所有资源加载之前设置
@@ -122,7 +102,8 @@ egame.define("Loader",["Signal"],function(Signal) {
     egame.Loader.clamp = function (x, a, b) {
         return ( x < a ) ? a : ( ( x > b ) ? b : x );
     };
-    egame.Loader.prototype = {
+    egame.Loader.prototype = Object.create(EventEmitter.prototype);
+    egame.util.extend(egame.Loader.prototype,{
         /**
          * 检查某个key和type的资源是否在等待加载的队列中
          */
@@ -184,11 +165,11 @@ egame.define("Loader",["Signal"],function(Signal) {
             this._resourceLoadStarted = false;
             this._totalResourceCount = 0;
             this._loadedResourceCount = 0;
-            this.onLoadStart.removeAll();
-            this.onLoadComplete.removeAll();
-            this.onResourceStart.removeAll();
-            this.onResourceComplete.removeAll();
-            this.onResourceError.removeAll();
+            this.off("loadStarted");
+            this.off("loadCompleted");
+            this.off("resourceStarted");
+            this.off("resourceCompleted");
+            this.off("resourceErrored");
         },
         /**
          * 从下载队列中删除资源
@@ -257,12 +238,12 @@ egame.define("Loader",["Signal"],function(Signal) {
 
                     //资源加载错误，触发文件加载错误事件
                     if (resource.status == egame.Resource.STATUS.ERRORED) {
-                        this.onResourceError.dispatch(resource.key, resource);
+                         this.emit("resourceErrored",resource.key, resource);
                     }
                     //增加加载了的资源数量
                     this._loadedResourceCount++;
                     //出发文件加载完成事件
-                    this.onResourceComplete.dispatch(this.progress, resource.key, resource.status, this._loadedResourceCount, this._totalResourceCount);
+                    this.emit("resourceCompleted",this.progress, resource.key, resource.status, this._loadedResourceCount, this._totalResourceCount);
 
                 }
             }
@@ -285,13 +266,13 @@ egame.define("Loader",["Signal"],function(Signal) {
                     //第一次加载出发
                     if (!this._resourceLoadStarted) {
                         this._resourceLoadStarted = true;
-                        this.onLoadStart.dispatch();
+                        this.emit("loadStarted");
                     }
 
                     //放入加载队列
                     this._flightQueue.push(resource);
                     resource.status = egame.Resource.STATUS.LOADING;
-                    this.onResourceStart.dispatch(this.progress, resource.key, resource.url);
+                    this.emit("resourceStarted",this.progress, resource.key, resource.url);
                     resource.load();
                 }
 
@@ -327,10 +308,10 @@ egame.define("Loader",["Signal"],function(Signal) {
             // 空队列情况调用加载开始
             if (!abnormal && !this._resourceLoadStarted) {
                 this._resourceLoadStarted = true;
-                this.onLoadStart.dispatch();
+                this.emit("loadStarted");
             }
             //加载完成事件
-            this.onLoadComplete.dispatch();
+            this.emit("loadCompleted");
             //重置加载器
             this.reset();
             //告诉游戏状态加载完成
@@ -430,7 +411,7 @@ egame.define("Loader",["Signal"],function(Signal) {
         totalQueuedFiles: function() {
             return this._totalResourceCount - this._loadedResourceCount;
         }
-    };
+    });
 
     /**
      * 加载进度非4舍5入的

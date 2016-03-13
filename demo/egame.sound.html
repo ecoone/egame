@@ -41,11 +41,10 @@
                     basicText.y = 100;
                     this.stage.addChild(basicText);
                     //资源加载过程的进度条
-                    game.load.onResourceComplete.add(function(){
+                    game.load.on("resourceCompleted",function(){
                         basicText.text ='当前进度：'+game.load.progress+'%' ;
                     });
-
-                    game.load.onLoadComplete.add(function(){
+                    game.load.on("loadCompleted",function(){
                             game.stage.removeChild(basicText); 
                     })
                 },

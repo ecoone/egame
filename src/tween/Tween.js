@@ -1,11 +1,17 @@
-egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
+egame.define("Tween", ["TweenData", "Easing", "EventEmitter"], function(TweenData, Easing, EventEmitter) {
     /**
      * A Tween allows you to alter one or more properties of a target object over a defined period of time.
      * This can be used for things such as alpha fading Sprites, scaling them or motion.
      * Use `Tween.to` or `Tween.from` to set-up the tween values. You can create multiple tweens on the same object
      * by calling Tween.to multiple times on the same Tween. Additional tweens specified in this way become "child" tweens and
      * are played through in sequence. You can use Tween.timeScale and Tween.reverse to control the playback of this Tween and all of its children.
-     *
+     * 触发的事件有：
+     * started:The started event is fired when the Tween begins. If there is a delay before the tween starts then onStart fires after the delay is finished.It will be sent 2 parameters: the target object and this tween.
+     * looped: The onLoop event is fired if the Tween or any child tween loops.It will be sent 2 parameters: the target object and this tween.
+     * repeated: The onRepeat event is fired if the Tween and all of its children repeats. If this tween has no children this will never be fired.It will be sent 2 parameters: the target object and this tween.
+     * childCompleted: The onChildComplete event is fired when the Tween or any of its children completes. Fires every time a child completes unless a child is set to repeat forever.It will be sent 2 parameters: the target object and this tween.
+     * completed:The onComplete event is fired when the Tween and all of its children completes. Does not fire if the Tween is set to loop or repeatAll(-1).It will be sent 2 parameters: the target object and this tween.
+     * 
      * @class egame.Tween
      * @constructor
      * @param {object} target - The target object, such as a egame.Sprite or egame.Sprite.scale.
@@ -13,7 +19,7 @@ egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
      * @param {egame.TweenManager} manager - The TweenManager responsible for looking after this Tween.
      */
     egame.Tween = function(target, game, manager) {
-
+        EventEmitter.call(this);
         /**
          * @property {egame.Game} game - A reference to the currently running Game.
          */
@@ -63,42 +69,6 @@ egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
          * @readonly
          */
         this.pendingDelete = false;
-
-        /**
-         * The onStart event is fired when the Tween begins. If there is a delay before the tween starts then onStart fires after the delay is finished.
-         * It will be sent 2 parameters: the target object and this tween.
-         * @property {egame.Signal} onStart
-         */
-        this.onStart = new egame.Signal();
-
-        /**
-         * The onLoop event is fired if the Tween or any child tween loops.
-         * It will be sent 2 parameters: the target object and this tween.
-         * @property {egame.Signal} onLoop
-         */
-        this.onLoop = new egame.Signal();
-
-        /**
-         * The onRepeat event is fired if the Tween and all of its children repeats. If this tween has no children this will never be fired.
-         * It will be sent 2 parameters: the target object and this tween.
-         * @property {egame.Signal} onRepeat
-         */
-        this.onRepeat = new egame.Signal();
-
-        /**
-         * The onChildComplete event is fired when the Tween or any of its children completes.
-         * Fires every time a child completes unless a child is set to repeat forever.
-         * It will be sent 2 parameters: the target object and this tween.
-         * @property {egame.Signal} onChildComplete
-         */
-        this.onChildComplete = new egame.Signal();
-
-        /**
-         * The onComplete event is fired when the Tween and all of its children completes. Does not fire if the Tween is set to loop or repeatAll(-1).
-         * It will be sent 2 parameters: the target object and this tween.
-         * @property {egame.Signal} onComplete
-         */
-        this.onComplete = new egame.Signal();
 
         /**
          * @property {boolean} isRunning - If the tween is running this is set to true, otherwise false. Tweens that are in a delayed state or waiting to start are considered as being running.
@@ -178,8 +148,8 @@ egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
          */
         this._hasStarted = false;
     };
-
-    egame.Tween.prototype = {
+    egame.Tween.prototype = Object.create(EventEmitter.prototype);
+    egame.util.extend(egame.Tween.prototype, {
 
         /**
          * Sets this tween to be a `to` tween on the properties given. A `to` tween starts at the current value and tweens to the destination value given.
@@ -366,8 +336,7 @@ egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
             this._onUpdateCallbackContext = null;
 
             if (complete) {
-                this.onComplete.dispatch(this.target, this);
-
+                this.emit("completed", this.target, this);
                 if (this.chainedTween) {
                     this.chainedTween.start();
                 }
@@ -746,7 +715,7 @@ egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
                 return true;
             } else if (status === egame.TweenData.RUNNING) {
                 if (!this._hasStarted) {
-                    this.onStart.dispatch(this.target, this);
+                    this.emit("started", this.target, this);
                     this._hasStarted = true;
                 }
 
@@ -757,7 +726,7 @@ egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
                 //  In case the update callback modifies this tween
                 return this.isRunning;
             } else if (status === egame.TweenData.LOOPED) {
-                this.onLoop.dispatch(this.target, this);
+                this.emit("looped", this.target, this);
                 return true;
             } else if (status === egame.TweenData.COMPLETE) {
                 var complete = false;
@@ -783,19 +752,17 @@ egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
                     //  We've reached the start or end of the child tweens (depending on Tween.reverse), should we repeat it?
                     if (this.repeatCounter === -1) {
                         this.timeline[this.current].start();
-                        this.onRepeat.dispatch(this.target, this);
+                        this.emit("repeated", this.target, this);
                         return true;
                     } else if (this.repeatCounter > 0) {
                         this.repeatCounter--;
-
                         this.timeline[this.current].start();
-                        this.onRepeat.dispatch(this.target, this);
+                        this.emit("repeated", this.target, this);
                         return true;
                     } else {
                         //  No more repeats and no more children, so we're done
                         this.isRunning = false;
-                        this.onComplete.dispatch(this.target, this);
-
+                        this.emit("completed", this.target, this);
                         if (this.chainedTween) {
                             this.chainedTween.start();
                         }
@@ -803,8 +770,7 @@ egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
                         return false;
                     }
                 } else {
-                    //  We've still got some children to go
-                    this.onChildComplete.dispatch(this.target, this);
+                    this.emit("childCompleted", this.target, this);
                     this.timeline[this.current].start();
                     return true;
                 }
@@ -861,8 +827,7 @@ egame.define("Tween",["TweenData","Easing"],function(TweenData,Easing) {
             return data;
 
         }
-
-    };
+    });
 
     /**
      * @name egame.Tween#totalDuration

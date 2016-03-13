@@ -23,7 +23,6 @@
   <link rel="stylesheet" href="css/reset.css"/>
   <script type="text/javascript" src="../lib/eco.js"></script>
   <script type="text/javascript" src="../src/egameConfig.js"></script>
-  <script type="text/javascript" src="http://172.30.43.70:8081/target/target-script-min.js#debugpagetag"></script>
 </head>
 <body>
   <script type="text/javascript">
@@ -47,14 +46,14 @@
 
                     //资源加载状态捕获
                     //加载资源完成时候调用
-                    game.load.onResourceComplete.add(function(){
+                    game.load.on("resourceCompleted",function(){
                         basicText.text ='当前进度：'+game.load.progress+'%' ;
                     });
-                    game.load.onResourceError.add(function(resourceKey){
+                    game.load.on("resourceErrored",function(resourceKey){
                         alert("资源"+resourceKey+"加载失败");
                     });
                     // 所有加载资源完成时候调用
-                    game.load.onLoadComplete.add(function(){
+                    game.load.on("loadCompleted",function(){
                         basicText.text ='当前进度：'+game.load.progress+'%' ;
                         game.stage.removeChildren();
                     });

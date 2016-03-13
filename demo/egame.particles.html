@@ -22,12 +22,12 @@
     </script>
     <link rel="stylesheet" href="css/reset.css"/>
     <script type="text/javascript" src="../lib/eco.js"></script>
-    <script type="text/javascript" src="../src/egame.js"></script>
+    
     <script type="text/javascript" src="../src/egameConfig.js"></script>
 </head>
 <body>
     <script type="text/javascript">
-      egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Physics','Arcade_Body','Particles','Emitter','SpriteSheet','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite,Physics,Body,Particles,Emitter,SpriteSheet){
+      egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Physics','ArcadeBody','Particles','Emitter','SpriteSheet','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite,Physics,Body,Particles,Emitter,SpriteSheet){
             //创建一个游戏对象
             var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
             game.load =  new Loader(game);
@@ -47,10 +47,10 @@
                     basicText.y = 100;
                     game.stage.addChild(basicText);
                     //资源加载过程的进度条
-                    game.load.onResourceComplete.add(function(){
+                    game.load.on("resourceCompleted",function(){
                         basicText.text ='当前进度：'+game.load.progress+'%' ;
                     });
-                    game.load.onLoadComplete.add(function(){
+                    game.load.on("loadCompleted",function(){
                             game.stage.removeChild(basicText); 
                     })
                 },

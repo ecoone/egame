@@ -37,7 +37,7 @@
                     //设置要加载的资源
                     load.image("mniya1","images/1.jpg");
                     // load.image("mniya2","images/notfound_img.jpg");
-                    load.images(["2","3","4","5","6"],["images/2.jpg","images/3.jpg","images/4.jpg","images/5.jpg","images/6.jpg"]);
+                    load.images(["2","3"],["images/2.jpg","images/3.jpg"]);
                     load.audio("sound1","musics/367664.mp3");
 
                     //加载资源界面
@@ -49,16 +49,16 @@
 
                     //资源加载状态捕获
                     //加载资源完成时候调用
-                    game.load.onResourceComplete.add(function(){
+                    game.load.on("resourceCompleted",function(){
                         basicText.text ='当前进度：'+game.load.progress+'%' ;
                     });
-                    game.load.onResourceError.add(function(resourceKey){
+                    game.load.on("resourceErrored",function(resourceKey){
                         alert("资源"+resourceKey+"加载失败");
                     });
                     // 所有加载资源完成时候调用
-                    game.load.onLoadComplete.add(function(){
+                    game.load.on("loadCompleted",function(){
                         basicText.text ='当前进度：'+game.load.progress+'%' ;
-                        // game.stage.removeChildren();
+                        game.stage.removeChildren();
                     });
                 },
                 create:function(){
@@ -77,7 +77,7 @@
                     sound.play();
                     //使用图片资源
                     // var texture = Texture.fromResource('mniya1');
-                    var texture = Texture.fromResource('5');
+                    var texture = Texture.fromResource('3');
                     var mniya = new Sprite(texture);
                     mniya.anchor.x = 0.5;
                     mniya.anchor.y = 0.5;

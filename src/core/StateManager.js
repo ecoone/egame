@@ -1,7 +1,7 @@
-egame.define("StateManager",function(){
-    //游戏状态管理器
+egame.define("StateManager",["EventEmitter"],function(EventEmitter){
+    //游戏状态管理器,触发的事件有stateChanged
     egame.StateManager = function (game, pendingState) {
-
+        EventEmitter.call(this);
         /**
          * 关联的game对象
         */
@@ -51,12 +51,6 @@ egame.define("StateManager",function(){
         * 当前激活的状态对象
         */
         this.current = '';
-
-        /**
-         * 状态变化信号
-        * 状态切换的时候出发，在前一个状态shutdown之后在新的状态preload之前
-        */
-        this.onStateChange = new egame.Signal();
 
         /**
         * 激活一个状态的时候调用
@@ -122,19 +116,17 @@ egame.define("StateManager",function(){
         * 状态shutdown的时候调用。比如切换状态   
         */
         this.onShutDownCallback = null;
-
     };
-
-    egame.StateManager.prototype = {
+    
+    egame.StateManager.prototype = Object.create(EventEmitter.prototype);
+    egame.util.extend(egame.StateManager.prototype,{
 
         /**
         * 在游戏启动的时候，启动状态管理器
         */
         boot: function () {
-
-            this.game.onPause.add(this.pause, this);
-            this.game.onResume.add(this.resume, this);
-
+            this.game.on("paused",this.pause,this);
+            this.game.on("resumed",this.resume,this);
             if (this._pendingState !== null && typeof this._pendingState !== 'string')
             {
                 this.add('default', this._pendingState, true);
@@ -286,8 +278,7 @@ egame.define("StateManager",function(){
                 this.setCurrentState(this._pendingState);
 
                 //状态变化触发事件
-                this.onStateChange.dispatch(this.current, previousStateKey);
-
+                this.emit("stateChanged",this.current, previousStateKey);
                 if (this.current !== this._pendingState)
                 {
                     return;
@@ -646,9 +637,7 @@ egame.define("StateManager",function(){
             this.current = '';
 
         }
-
-    };
-
+    });
     egame.StateManager.prototype.constructor = egame.StateManager;
 
     /**

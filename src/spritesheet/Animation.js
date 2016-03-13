@@ -1,4 +1,4 @@
-egame.define("Animation", function() {
+egame.define("Animation", ["EventEmitter"], function(EventEmitter) {
 
     /**
      * An Animation instance contains a single animation and the controls to play it.
@@ -15,9 +15,14 @@ egame.define("Animation", function() {
      * @param {number} [frameRate=60] - The speed at which the animation should play. The speed is given in frames per second.
      * @param {boolean} [loop=false] - Whether or not the animation is looped or just plays once.
      * @param {boolean} loop - Should this animation loop when it reaches the end or play through once.
+     * 触发的事件有：
+     * started：This event is dispatched when this Animation starts playback.
+     * completed:This event is dispatched when this Animation completes playback. If the animation is set to loop this is never fired, listen for onLoop instead.
+     * updated:This event is dispatched when the Animation changes frame. By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
+     * looped:This event is dispatched when this Animation loops.
      */
     egame.Animation = function(game, parent, name, frameData, frames, frameRate, loop) {
-
+        EventEmitter.call(this);
         if (loop === undefined) {
             loop = false;
         }
@@ -123,36 +128,12 @@ egame.define("Animation", function() {
          */
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
-        /**
-         * @property {egame.Signal} onStart - This event is dispatched when this Animation starts playback.
-         */
-        this.onStart = new egame.Signal();
-
-        /**
-         * This event is dispatched when the Animation changes frame. 
-         * By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
-         * @property {egame.Signal|null} onUpdate
-         * @default
-         */
-        this.onUpdate = null;
-
-        /**
-         * @property {egame.Signal} onComplete - This event is dispatched when this Animation completes playback. If the animation is set to loop this is never fired, listen for onLoop instead.
-         */
-        this.onComplete = new egame.Signal();
-
-        /**
-         * @property {egame.Signal} onLoop - This event is dispatched when this Animation loops.
-         */
-        this.onLoop = new egame.Signal();
-
         //  Set-up some event listeners
-        this.game.onPause.add(this.onPause, this);
-        this.game.onResume.add(this.onResume, this);
-
+        this.game.on("paused", this.onPause, this);
+        this.game.on("resumed", this.onResume, this);
     };
-
-    egame.Animation.prototype = {
+    egame.Animation.prototype = Object.create(EventEmitter.prototype);
+    egame.util.extend(egame.Animation.prototype, {
 
         /**
          * Plays this animation.
@@ -191,9 +172,8 @@ egame.define("Animation", function() {
             this._frameIndex = 0;
             this.updateCurrentFrame(false, true);
 
-            // this._parent.events.onAnimationStart$dispatch(this._parent, this); //TONIU
-
-            this.onStart.dispatch(this._parent, this);
+            this._parent.emit("animationStart", this._parent, this);
+            this.emit("started", this._parent, this);
 
             this._parent.currentAnim = this;
             this._parent.currentFrame = this.currentFrame;
@@ -225,8 +205,7 @@ egame.define("Animation", function() {
 
             this._parent.currentAnim = this;
             this._parent.currentFrame = this.currentFrame;
-
-            this.onStart.dispatch(this._parent, this);
+            this.emit("started",this._parent, this);
 
         },
 
@@ -303,8 +282,8 @@ egame.define("Animation", function() {
             }
 
             if (dispatchComplete) {
-                this._parent.events.onAnimationComplete$dispatch(this._parent, this);
-                this.onComplete.dispatch(this._parent, this);
+                this._parent.emit("animationComplete", this._parent, this);
+                this.emit("completed", this._parent, this);
             }
 
         },
@@ -377,11 +356,10 @@ egame.define("Animation", function() {
                         }
 
                         this.loopCount++;
-                        // this._parent.events.onAnimationLoop$dispatch(this._parent, this);
-                        this.onLoop.dispatch(this._parent, this);
-
+                        this._parent.emit("animationLoop", this._parent, this);
+                        this.emit("looped", this._parent, this);
                         if (this.onUpdate) {
-                            this.onUpdate.dispatch(this, this.currentFrame);
+                            this.emit("updated", this, this.currentFrame);
 
                             // False if the animation was destroyed from within a callback
                             return !!this._frameData;
@@ -434,7 +412,7 @@ egame.define("Animation", function() {
             }
 
             if (this.onUpdate && signalUpdate) {
-                this.onUpdate.dispatch(this, this.currentFrame);
+                this.emit("updated", this, this.currentFrame);
 
                 // False if the animation was destroyed from within a callback
                 return !!this._frameData;
@@ -526,25 +504,18 @@ egame.define("Animation", function() {
                 // Already destroyed
                 return;
             }
-
-            this.game.onPause.remove(this.onPause, this);
-            this.game.onResume.remove(this.onResume, this);
-
+            this.game.off("paused", this.onPause, this);
+            this.game.off("resumed", this.onResume, this);
             this.game = null;
             this._parent = null;
             this._frames = null;
             this._frameData = null;
             this.currentFrame = null;
             this.isPlaying = false;
-
-            this.onStart.dispose();
-            this.onLoop.dispose();
-            this.onComplete.dispose();
-
-            if (this.onUpdate) {
-                this.onUpdate.dispose();
-            }
-
+            this.off("started");
+            this.off("looped");
+            this.off("completed");
+            if (this.onUpdate) this.off("upated");
         },
 
         /**
@@ -561,18 +532,15 @@ egame.define("Animation", function() {
             this.isPlaying = false;
             this.isFinished = true;
             this.paused = false;
-
-            this._parent.events.onAnimationComplete$dispatch(this._parent, this);
-
-            this.onComplete.dispatch(this._parent, this);
+            this._parent.emit("animationComplete", this._parent, this);
+            this.emit("completed", this._parent, this);
 
             if (this.killOnComplete) {
                 this._parent.kill();
             }
 
         }
-
-    };
+    });
 
     egame.Animation.prototype.constructor = egame.Animation;
 
@@ -644,7 +612,7 @@ egame.define("Animation", function() {
                 this._parent.setSourceFrame(this.currentFrame);
 
                 if (this.onUpdate) {
-                    this.onUpdate.dispatch(this, this.currentFrame);
+                    this.emit("updated", this, this.currentFrame);
                 }
             }
 
@@ -689,9 +657,9 @@ egame.define("Animation", function() {
         set: function(value) {
 
             if (value && this.onUpdate === null) {
-                this.onUpdate = new egame.Signal();
+                this.onUpdate = true;
             } else if (!value && this.onUpdate !== null) {
-                this.onUpdate.dispose();
+                this.off("updated");
                 this.onUpdate = null;
             }
 

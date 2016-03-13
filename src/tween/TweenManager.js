@@ -98,10 +98,8 @@ egame.define("TweenManager",["Tween"],function(Tween) {
             "Bounce.easeInOut": egame.Easing.Bounce.InOut
 
         };
-
-        // this.game.onPause.add(this._pauseAll, this);   //TODO NIU
-        // this.game.onResume.add(this._resumeAll, this);
-
+        this.game.on("paused",this._pauseAll,this);
+        this.game.on("resumed",this._resumeAll,this);
     };
 
     egame.TweenManager.prototype = {

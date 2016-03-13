@@ -41,9 +41,8 @@ egame.define("World", ["Camera"], function(Camera) {
          * @property {number} height - 世界默认的高度。有时候边界需要长大（如果你调整游戏的大小），但这仍然保留了原来的要求尺寸。
          */
         this._height = game.height;
-
-        this.game.state.onStateChange.add(this.stateChange, this);
-
+        //监听事件变化
+        this.game.state.on("stateChanged",this.stateChange, this);
     };
 
     egame.World.prototype.constructor = egame.World;
