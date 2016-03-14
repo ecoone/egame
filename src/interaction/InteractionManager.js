@@ -406,7 +406,6 @@ InteractionManager.prototype.onMouseDown = function (event)
     this.mouse.originalEvent = event;
     this.eventData.data = this.mouse;
     this.eventData.stopped = false;
-
     // 更新坐标点
     this.mapPositionToPoint( this.mouse.global, event.clientX, event.clientY);
 

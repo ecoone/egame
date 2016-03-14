@@ -11,8 +11,8 @@ egame.define("TilingSprite", ["CanvasTinter", "Point", "Sprite", "CanvasBuffer",
      * @param width {number}  the width of the tiling sprite
      * @param height {number} the height of the tiling sprite
      */
-    function TilingSprite(texture, width, height) {
-        Sprite.call(this, texture);
+    function TilingSprite(textureOrResourceKey, width, height) {
+        Sprite.call(this, textureOrResourceKey);
 
         /**
          * The scaling of the image that is being tiled

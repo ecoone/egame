@@ -64,7 +64,10 @@
                     mniya1.scale.x = 0.2;
                     mniya1.scale.y = 0.2;
                     this.mniya1 = mniya1;
-                    var tilingSprite = new TilingSprite(texture2, game.stage.renderer.width, game.stage.renderer.height);
+                    //方式1
+                    // var tilingSprite = new TilingSprite(texture2, game.stage.renderer.width, game.stage.renderer.height);
+                    // 方式2
+                    var tilingSprite = new TilingSprite('starfield', game.stage.renderer.width, game.stage.renderer.height);
                     this.tilingSprite = tilingSprite;
                     this.stage.addChild(tilingSprite);
                     this.stage.addChild(mniya1);

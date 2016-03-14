@@ -69,12 +69,20 @@
                     this.stage.addChild(tilingSprite);
                     this.stage.addChild(mniya1);
                     this.stage.interactive = true;
-                    game.stage.on("mousedown",function(){
-                      console.log(game.stage.renderer.plugins.interaction.mouse.global);
+                    game.stage.on("mousedown",function(eventData){
+                       //这个点的坐标是在画布中位置
+                       console.log(eventData.data.global);
+                       //检测点击的位置是否在mniya1对象内部
+                       console.log(mniya1.containsPoint(eventData.data.global));
                     });
-                    game.stage.on("touchstart",function(){
-                      console.log(game.stage.renderer.plugins.interaction.mouse.global);
+                    game.stage.on("touchstart",function(eventData){
+                    //这个点的坐标是在画布中位置
+                       console.log(eventData.data.global);
+                       //检测点击的位置是否在mniya1对象内部
+                       console.log(mniya1.containsPoint(eventData.data.global));
                     });
+                    game.world.setBounds(0, 0, 1920, 1920);
+                    game.camera.x=100;
                 },
                 update:function(){
                 }

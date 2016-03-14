@@ -1,4 +1,4 @@
-egame.define("Sprite", ["CONST", "Utils", "Point","CanvasTinter","Container","Texture","Component","Core","FixedToCamera","InCamera","Overlap","LifeSpan","Smoothed"], function(CONST, Utils, Point,CanvasTinter,Container,Texture,Component,Core,FixedToCamera,InCamera,Overlap,LifeSpan,Smoothed) {
+egame.define("Sprite", ["CONST", "Utils", "Point","CanvasTinter","Container","Texture","Component","Core","FixedToCamera","InCamera","Overlap","LifeSpan","Smoothed","Reset"], function(CONST, Utils, Point,CanvasTinter,Container,Texture,Component,Core,FixedToCamera,InCamera,Overlap,LifeSpan,Smoothed,Reset) {
  var   tempPoint = new Point();
 /**
  * 
@@ -510,7 +510,7 @@ Sprite.fromImage = function (imageId, crossorigin, scaleMode)
 {
     return new Sprite(Texture.fromImage(imageId, crossorigin, scaleMode));
 };
-    Component.install.call(Sprite.prototype,["Core","FixedToCamera","InCamera","Overlap","LifeSpan","Smoothed"]);
+    Component.install.call(Sprite.prototype,["Core","FixedToCamera","InCamera","Overlap","LifeSpan","Smoothed","Reset"]);
     egame.Sprite = Sprite;
     return Sprite;
 });

@@ -4,7 +4,6 @@ egame.define("Time",["EventEmitter"],function(EventEmitter){
      * 触发的事件有completed所有计时器事件处理完成时候触发
      */
     egame.Time = function (game) {
-        EventEmitter.call(this);
        /**
         * game对象
         */
@@ -443,7 +442,7 @@ egame.define("Time",["EventEmitter"],function(EventEmitter){
 
 
     egame.Timer = function (game, autoDestroy) {
-
+        EventEmitter.call(this);
         if (autoDestroy === undefined) { autoDestroy = true; }
 
         /**
@@ -538,7 +537,7 @@ egame.define("Time",["EventEmitter"],function(EventEmitter){
         this._newTick = 0;
 
     };
-
+    egame.Timer.prototype = Object.create(EventEmitter.prototype);
     /**
     * 1分钟
     */
@@ -559,7 +558,7 @@ egame.define("Time",["EventEmitter"],function(EventEmitter){
     */
     egame.Timer.QUARTER = 250;
 
-    egame.Timer.prototype = {
+    egame.util.extend(egame.Timer.prototype,{
 
         /**
         * 在计时器上创建一个计时器事件
@@ -953,8 +952,7 @@ egame.define("Time",["EventEmitter"],function(EventEmitter){
             this._i = 0;
 
         }
-
-    };
+    });
 
     /**
     * 下一次要触发TimeEvent的时间
