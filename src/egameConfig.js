@@ -55,6 +55,7 @@ egame.config({
 		"InCamera":'components/InCamera.js',
 		"Overlap":'components/Overlap.js',
 		"LifeSpan":'components/LifeSpan.js',
+		"InWorld":'components/InWorld.js',
 		"Smoothed":'components/Smoothed.js',
 		"Reset":'components/Reset.js',
 		"InteractionData":'interaction/InteractionData.js',//输入部分

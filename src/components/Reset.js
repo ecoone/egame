@@ -45,11 +45,10 @@ egame.define("Reset", ["Component"], function(Component) {
             this.health = health;
         }
 
-        if (this.components.PhysicsBody) {
-            if (this.body) {
-                this.body.reset(x, y, false, false);
-            }
+        if (this.body) {
+            this.body.reset(x, y, false, false);
         }
+
 
         return this;
 

@@ -58,11 +58,15 @@ egame.define("Core", ["Component", "Point"], function(Component, Point) {
             if (this.body) {
                 this.body.preUpdate();
             }
-
+            var flag = false;
             if (this.components && this.components.LifeSpan) {
-                egame.Component.LifeSpan.preUpdate.call(this);
+                flag = egame.Component.LifeSpan.preUpdate.call(this);
+                if(!flag) return;
             }
-
+            if (this.components && this.components.InWorld) {
+                flag = egame.Component.InWorld.preUpdate.call(this);
+                if(!flag) return;
+            }
             if (this.children && this.children.length > 0) {
                 for (var i = 0; i < this.children.length; i++) {
                     this.children[i].preUpdate();

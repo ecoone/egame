@@ -28,7 +28,7 @@
     <script type="text/javascript">
       egame.use(['Game','Loader','Texture','Sprite','Text','Sound','SpriteSheet','Physics','ArcadeBody','TilingSprite','Group','InteractionManager','Image','Audio','Json'],function(Game,Loader,Texture,Sprite,Text,Sound,SpriteSheet,Physics,ArcadeBody,TilingSprite,Group){
             //创建一个游戏对象
-            var game = new Game(500,600,document.body,egame.ScaleMode.FIXED_WIDTH);
+            var game = new Game(800,600,document.body,egame.ScaleMode.FIXED_WIDTH);
             var load =  new Loader(game);
             
             //加载资源
@@ -94,10 +94,10 @@
 
                     for (var y = 0; y < 4; y++)
                     {
-                        for (var x = 0; x < 6; x++)
+                        for (var x = 0; x < 8; x++)
                         {
                             brick =new SpriteSheet('breakout','breakoutConfig');
-                            brick.x = 120 + (x * 36);
+                            brick.x = 220 + (x * 36);
                             brick.y = 100 + (y * 52);
                             brick.frameName = 'brick_' + (y+1) + '_1.png';
                             bricks.add(brick);
@@ -123,7 +123,7 @@
                     ball.anchor.set(0.5);
                     ball.checkWorldBounds = true;
                     game.physics.enable(ball, egame.Physics.ARCADE);
-
+                    ball.on("outOfBounds",ballLost);
                     ball.body.collideWorldBounds = true;
                     ball.body.bounce.set(1);
 
@@ -181,9 +181,6 @@
                     {
                         game.physics.arcade.collide(ball, paddle, ballHitPaddle, null, this);
                         game.physics.arcade.collide(ball, bricks, ballHitBrick, null, this);
-                        // if(ball.body.y>600){
-                        //     ballLost();
-                        // }
                     }
                 },
                 releaseBall:function(){
@@ -199,7 +196,6 @@
 
             };
 function ballLost () {
-
     lives--;
     livesText.text = 'lives: ' + lives;
 
@@ -210,7 +206,7 @@ function ballLost () {
     else
     {
         ballOnPaddle = true;
-        // ball.reset(paddle.body.x + 16, paddle.y - 16);
+        ball.reset(paddle.body.x + 16, paddle.y - 16);
         
         // ball.animations.stop();
     }
@@ -234,22 +230,18 @@ function ballHitBrick (_ball, _brick) {
 
     scoreText.text = 'score: ' + score;
 
-    //  Are they any bricks left?
     if (bricks.countLiving() == 0)
     {
-        //  New level starts
         score += 1000;
         scoreText.text = 'score: ' + score;
         introText.text = '- Next Level -';
 
-        //  Let's move the ball back to the paddle
         ballOnPaddle = true;
         ball.body.velocity.set(0);
         ball.x = paddle.x + 16;
         ball.y = paddle.y - 16;
         // ball.animations.stop();
 
-        //  And bring the bricks back from the dead :)
         bricks.callAll('revive');
     }
 
@@ -261,20 +253,16 @@ function ballHitPaddle (_ball, _paddle) {
 
     if (_ball.x < _paddle.x)
     {
-        //  Ball is on the left-hand side of the paddle
         diff = _paddle.x - _ball.x;
         _ball.body.velocity.x = (-10 * diff);
     }
     else if (_ball.x > _paddle.x)
     {
-        //  Ball is on the right-hand side of the paddle
         diff = _ball.x -_paddle.x;
         _ball.body.velocity.x = (10 * diff);
     }
     else
     {
-        //  Ball is perfectly in the middle
-        //  Add a little random X to stop it bouncing straight up!
         _ball.body.velocity.x = 2 + Math.random() * 8;
     }
 

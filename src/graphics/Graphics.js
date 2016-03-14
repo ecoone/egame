@@ -1,4 +1,4 @@
-egame.define("Graphics",["Container","Texture","CanvasBuffer","CanvasGraphics","CONST","Point","Rectangle","Polygon","RoundedRectangle","Ellipse","Circle","GraphicsData","Component","Core","FixedToCamera","InCamera","Overlap","LifeSpan","Smoothed","Reset"],function(Container,Texture,CanvasBuffer,CanvasGraphics,CONST,Point,Rectangle,Polygon,RoundedRectangle,Ellipse,Circle,GraphicsData,Component,Core,FixedToCamera,InCamera,Overlap,LifeSpan,Smoothed,Reset) {
+egame.define("Graphics",["Container","Texture","CanvasBuffer","CanvasGraphics","CONST","Point","Rectangle","Polygon","RoundedRectangle","Ellipse","Circle","GraphicsData","Component","Core","FixedToCamera","InCamera","Overlap","LifeSpan","Smoothed","Reset","InWorld"],function(Container,Texture,CanvasBuffer,CanvasGraphics,CONST,Point,Rectangle,Polygon,RoundedRectangle,Ellipse,Circle,GraphicsData,Component,Core,FixedToCamera,InCamera,Overlap,LifeSpan,Smoothed,Reset,InWorld) {
     var tempPoint = new Point();
 /**
  * The Graphics class contains methods used to draw primitive shapes such as lines, circles and
@@ -1174,7 +1174,7 @@ Graphics.prototype.destroy = function () {
     this._webgl = null;
     this._localBounds = null;
 };
-    Component.install.call(Graphics.prototype,["Core","FixedToCamera","InCamera","Overlap","LifeSpan","Smoothed","Reset"]);
+    Component.install.call(Graphics.prototype,["Core","FixedToCamera","InCamera","Overlap","LifeSpan","Smoothed","Reset","InWorld"]);
     egame.Graphics = Graphics;
     return Graphics;
 
