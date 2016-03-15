@@ -170,7 +170,7 @@ egame.define("Stage", ["Container", "CanvasRenderer", "CONST"], function(Contain
         function rgbToHex(c) {
             return ((c[0] << 16) + (c[1] << 8) + c[2]);
         }
-
+        var c = {};
         var hexValue = color;
         //#RRGGBB 
         if (color[0] === '#') {

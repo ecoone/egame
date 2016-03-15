@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>egame平铺精灵模板</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+    <link rel="stylesheet" href="css/reset.css"/>
+    <script type="text/javascript" src="../lib/eco.js"></script>
+    <script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+      egame.use(['Game','Loader','Texture','Sprite','Text','Tilemap','TilemapLayer','TilemapCollision','Image','Json'],function(Game,Loader,Texture,Sprite,Text,Tilemap,TilemapLayer){
+            //创建一个游戏对象
+            var game = new Game(800, 600,document.body,egame.ScaleMode.FIXED_WIDTH);
+            game.load =  new Loader(game);
+            var map;
+            var tileset;
+            var layer;
+            var p;
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+                    game.physics = new egame.Physics(game);
+                    game.load.image("super_mario","images/super_mario.png");
+                    game.load.image("player","images/dude.png");
+                    game.load.json("super_mario_tilemap","text/super_mario.json");
+                    game.stage.backgroundColor = 0x1099bb;
+                    var basicText = new Text('当前进度：0%');
+                    basicText.x = 150;
+                    basicText.y = 100;
+                    this.stage.addChild(basicText);
+                    //资源加载过程的进度条
+                    game.load.on("resourceCompleted",function(){
+                        basicText.text ='当前进度：'+game.load.progress+'%' ;
+                    });
+                    game.load.on("loadCompleted",function(){
+                            game.stage.removeChild(basicText); 
+                    })
+                },
+                create:function(){
+                    game.stage.backgroundColor = '#787878';
+
+                    map = new Tilemap(game,'super_mario_tilemap');
+
+                    map.addTilesetImage('SuperMarioBros-World1-1', 'super_mario');
+
+                    map.setCollisionBetween(15, 16);
+                    map.setCollisionBetween(20, 25);
+                    map.setCollisionBetween(27, 29);
+                    map.setCollision(40);
+                    
+                    layer = map.createLayer('World1');
+
+                    //  Un-comment this on to see the collision tiles
+                    // layer.debug = true;
+
+                    layer.resizeWorld();
+
+                    p = new Sprite('player');
+                    p.x =32;
+                    p.y =32;
+                    game.physics.enable(p);
+
+                    game.physics.arcade.gravity.y = 250;
+
+                    p.body.bounce.y = 0.2;
+                    p.body.linearDamping = 1;
+                    p.body.collideWorldBounds = true;
+                    game.stage.addChild(p);
+                    //存在坐标bug问题
+                    // game.camera.follow(p);
+    
+                },
+                update:function(){
+                    game.physics.arcade.collide(p, layer);
+                    p.body.velocity.x = 0;
+                    p.body.velocity.x = 150;
+                    window.p = p;
+                }
+            };
+            //启动游戏
+            game.boot();
+            //启动状态
+            game.state.add("loadding",loaddingStatus,true);
+            // game.state.start("loadding");
+                 
+      });
+    </script>
+</body>
+</html>
