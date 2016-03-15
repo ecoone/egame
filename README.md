@@ -16,6 +16,7 @@ egame是一个使用ecojs开发的轻量级、模块化、易于扩展的2d canv
 11. 粒子效果(Particle)
 12. 物理引擎(Physics)
 13. 输入(InteractionManager)
+14. 贴片地图(Tilemap)
 
 ##基础使用例子
 ```
