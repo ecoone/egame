@@ -84,7 +84,7 @@ egame.use(['Game', 'Loader', 'Texture', 'Sprite', 'Text', 'Sound', 'SpriteSheetA
         , create:function() {
             //设置背景色
             game.stage.backgroundColor = 0xDDEEFF;
-
+            game.stage.smoothed = false;
             credits = new Text('mniya.com\n@mni_Ya',{
                 font: '8px "Press Start 2P"', fill:'#fff', align:'center'
             }

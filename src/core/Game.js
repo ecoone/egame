@@ -30,7 +30,7 @@ egame.define("Game", ["RequestAnimationFrame", "EventEmitter", "StateManager", "
 
 			//游戏是否暂停
 			this._paused = false;
-			this.raf = new RequestAnimationFrame(this);
+			this.raf = new RequestAnimationFrame();
 			this.state = new StateManager(this, state);
 			this.time = new Time(this);
 			this.load = null;
@@ -91,10 +91,7 @@ egame.define("Game", ["RequestAnimationFrame", "EventEmitter", "StateManager", "
 				while (this._deltaTime >= slowStep) {
 					this._deltaTime -= slowStep;
 					this.currentUpdateID = count;
-
 					this.updateLogic(this.time.desiredFpsMult);
-
-
 					count++;
 
 					if (this.forceSingleUpdate && count === 1) {
