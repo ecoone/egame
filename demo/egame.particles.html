@@ -30,12 +30,12 @@
       egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Physics','ArcadeBody','Particles','Emitter','SpriteSheet','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite,Physics,Body,Particles,Emitter,SpriteSheet){
             //创建一个游戏对象
             var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
-            game.load =  new Loader(game);
+            var load =  new Loader(game);
             game.particles = new Particles(game);
+            var physics = new Physics(game);
             //初始画面
             var loaddingStatus = {
                 preload:function(){
-                    game.physics = new Physics(game);
                     game.load.image("snow","images/snow.png");
                     game.load.image("snowlarge","images/snowlarge.png");
                     game.load.image("snowflakes","images/snowflakes.png");

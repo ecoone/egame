@@ -33,7 +33,8 @@ egame.define("Game", ["RequestAnimationFrame", "EventEmitter", "StateManager", "
 			this.raf = new RequestAnimationFrame();
 			this.state = new StateManager(this, state);
 			this.time = new Time(this);
-			this.load = null;
+			this.stage = new Stage(this);
+			this.world = new World(this);
 		}
 		//缩放模式
 	egame.ScaleMode = {
@@ -167,8 +168,6 @@ egame.define("Game", ["RequestAnimationFrame", "EventEmitter", "StateManager", "
 			}
 			if (statusName) this.state.start(statusName);
 			this.isBooted = true;
-			this.stage = new Stage(this);
-			this.world = new World(this);
 			this.time.boot();
 			this.world.boot();
 			this.state.boot();

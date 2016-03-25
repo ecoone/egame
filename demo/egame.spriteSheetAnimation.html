@@ -29,7 +29,7 @@
 	  egame.use(['Game','Loader','Texture','Sprite','Text','SpriteSheetAnimation','Image','Json'],function(Game,Loader,Texture,Sprite,Text,SpriteSheetAnimation){
             //创建一个游戏对象
             var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
-            game.load =  new Loader(game);
+            var load =  new Loader(game);
             //初始画面
             var loaddingStatus = {
                 preload:function(){

@@ -35,6 +35,7 @@ egame.use(['Game', 'Loader', 'Texture', 'Sprite', 'Text', 'Sound', 'SpriteSheetA
     //创建一个游戏对象
     var game = new Game(480, 700, document.body, egame.ScaleMode.FULL_PAGE);
     var load =  new Loader(game);
+    var physics = new Physics(game);
     //全局变量
     var SPEED = 180;
     var GRAVITY = 570;
@@ -45,7 +46,6 @@ egame.use(['Game', 'Loader', 'Texture', 'Sprite', 'Text', 'Sound', 'SpriteSheetA
 
     var gameStatus = {
         preload:function() {
-            game.physics = new Physics(game);
             //要加载的图片
             load.image("birdie", "assets/birdie.png");
             load.image("clouds", "assets/clouds.png");

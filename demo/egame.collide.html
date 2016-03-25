@@ -29,11 +29,11 @@
       egame.use(['Game','Loader','Texture','Sprite','Text','TilingSprite','Physics','ArcadeBody','Image'],function(Game,Loader,Texture,Sprite,Text,TilingSprite,Physics,Body){
             //创建一个游戏对象
             var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
-            game.load =  new Loader(game);
+            var load =  new Loader(game);
+            var physics = new Physics(game);
             //初始画面
             var loaddingStatus = {
                 preload:function(){
-                    game.physics = new Physics(game);
                     game.load.image("mniya1","images/1.jpg");
                     game.load.image("starfield","images/starfield.jpg");
                     game.stage.renderer.backgroundColor = 0x1099bb;

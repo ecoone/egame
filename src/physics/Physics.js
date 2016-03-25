@@ -14,13 +14,12 @@ egame.define("Physics", function() {
      * @param {object} [physicsConfig=null] - A physics configuration object to pass to the Physics world on creation.
      */
     egame.Physics = function(game, system) {
-
-
         /**
          * @property {egame.Game} game - Local reference to game.
          */
         this.game = game;
-
+     
+        if(game) game.physics = this;
       
         /**
          * @property {egame.Physics.Arcade} arcade - The Arcade Physics system.
@@ -55,7 +54,6 @@ egame.define("Physics", function() {
         game.physics = this;
 
         this.startSystem(system||0);
-
     };
 
     /**

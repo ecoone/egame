@@ -29,7 +29,7 @@
       egame.use(['Game','Loader','Texture','Sprite','Text','Tilemap','TilemapLayer','TilemapCollision','Image','Json'],function(Game,Loader,Texture,Sprite,Text,Tilemap,TilemapLayer){
             //创建一个游戏对象
             var game = new Game(800, 600,document.body,egame.ScaleMode.FIXED_WIDTH);
-            game.load =  new Loader(game);
+            var load =  new Loader(game);
             var map;
             var tileset;
             var layer;
