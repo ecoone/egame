@@ -314,7 +314,30 @@ egame.define("Utils",["CONST"],function(CONST) {
             pluginTarget(obj);
         }
     };
+    var degreeToRadiansFactor = Math.PI / 180;
+    var radianToDegreesFactor = 180 / Math.PI;
 
+    /**
+    * Convert degrees to radians.
+    *
+    * @method Phaser.Math#degToRad
+    * @param {number} degrees - Angle in degrees.
+    * @return {number} Angle in radians.
+    */
+    Utils.degToRad = function degToRad (degrees) {
+        return degrees * degreeToRadiansFactor;
+    };
+
+    /**
+    * Convert degrees to radians.
+    *
+    * @method Utils.Math#radToDeg
+    * @param {number} radians - Angle in radians.
+    * @return {number} Angle in degrees
+    */
+    Utils.radToDeg = function radToDeg (radians) {
+        return radians * radianToDegreesFactor;
+    };
     egame.Utils = Utils;
     return Utils;
 });

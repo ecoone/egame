@@ -2067,23 +2067,5 @@ egame.define("Group",["Container","EventEmitter"],function(Container,EventEmitte
 
     });
 
-    /**
-     * group容器的角度
-     * 通过修改局部变换，来调整该组
-     * 这对子元素的旋转和角度性能没有影响，他们会更新自己的世界变换和屏幕中的方向和位置
-     * @name egame.Group#angle
-     * @property {number} angle
-     */
-    Object.defineProperty(egame.Group.prototype, "angle", {
-
-        get: function() {
-            return egame.Math.radToDeg(this.rotation);
-        },
-
-        set: function(value) {
-            this.rotation = egame.Math.degToRad(value);
-        }
-
-    });
     return egame.Group;
 });

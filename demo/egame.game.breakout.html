@@ -26,7 +26,7 @@
 </head>
 <body>
     <script type="text/javascript">
-      egame.use(['Game','Loader','Texture','Sprite','Text','Sound','SpriteSheet','Physics','ArcadeBody','TilingSprite','Group','InteractionManager','Image','Audio','Json'],function(Game,Loader,Texture,Sprite,Text,Sound,SpriteSheet,Physics,ArcadeBody,TilingSprite,Group){
+      egame.use(['Game','Loader','Texture','Sprite','SpriteSheet','Text','Sound','SpriteSheetAnimation','Physics','ArcadeBody','TilingSprite','Group','InteractionManager','Image','Audio','Json'],function(Game,Loader,Texture,Sprite,SpriteSheet,Text,Sound,SpriteSheetAnimation,Physics,ArcadeBody,TilingSprite,Group){
             //创建一个游戏对象
             var game = new Game(800,600,document.body,egame.ScaleMode.FIXED_WIDTH);
             var load =  new Loader(game);
@@ -116,13 +116,14 @@
                     paddle.body.bounce.set(1);
                     paddle.body.immovable = true;
 
-                    ball = new SpriteSheet('breakout','breakoutConfig');
+                    ball = new SpriteSheetAnimation(game,'breakout','breakoutConfig');
                     ball.x = game.world.centerX;
                     ball.y = paddle.y - 16;
                     ball.frameName = 'ball_1.png';
                     ball.anchor.set(0.5);
                     ball.checkWorldBounds = true;
                     game.physics.enable(ball, egame.Physics.ARCADE);
+                    ball.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
                     ball.on("outOfBounds",ballLost);
                     ball.body.collideWorldBounds = true;
                     ball.body.bounce.set(1);
@@ -189,7 +190,7 @@
                         ballOnPaddle = false;
                         ball.body.velocity.y = -300;
                         ball.body.velocity.x = -75;
-                        // ball.animations.play('spin');
+                        ball.play('spin');
                         introText.visible = false;
                     }                    
                 }
@@ -208,7 +209,7 @@ function ballLost () {
         ballOnPaddle = true;
         ball.reset(paddle.body.x + 16, paddle.y - 16);
         
-        // ball.animations.stop();
+        ball.stop();
     }
 
 }

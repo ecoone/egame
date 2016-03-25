@@ -244,27 +244,18 @@ Texture.fromImage = function (imageUrl, crossorigin, scaleMode)
     return texture;
 };
 Texture.fromResource = function(resourceName, scaleMode){
-    var imageUrl = egame.Caches[resourceName].requestUrl;
-    var data = egame.Caches[resourceName].data;
-    var texture = Utils.TextureCache[imageUrl];
-    if (!texture)
-    {
-        texture = new Texture(new BaseTexture(data,scaleMode));
-        Utils.TextureCache[imageUrl] = texture;
+    if(egame.Caches[resourceName]&&egame.Caches[resourceName].requestUrl){
+        var imageUrl = egame.Caches[resourceName].requestUrl;
+        var data = egame.Caches[resourceName].data;
+        var texture = Utils.TextureCache[imageUrl];
+        if (!texture)
+        {
+            texture = new Texture(new BaseTexture(data,scaleMode));
+            Utils.TextureCache[imageUrl] = texture;
+        }
+    }else{
+        return Texture.EMPTY.clone();
     }
-
-    return texture;    
-}
-
-Texture.fromResource2 = function(resourceName,crossorigin, scaleMode){
-    var imageUrl = egame.Caches[resourceName].requestUrl;
-    var texture = Utils.TextureCache[imageUrl];
-    if (!texture)
-    {
-        texture = new Texture(BaseTexture.fromImage(imageUrl, crossorigin, scaleMode));
-        Utils.TextureCache[imageUrl] = texture;
-    }
-
     return texture;    
 }
 

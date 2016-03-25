@@ -1,4 +1,4 @@
-egame.define("DisplayObject", ["RenderTexture", "Point", "Rectangle", "Matrix", "CONST", "EventEmitter"], function(RenderTexture, Point, Rectangle, Matrix, CONST, EventEmitter) {
+egame.define("DisplayObject", ["RenderTexture", "Point", "Rectangle", "Matrix", "CONST", "EventEmitter","Utils"], function(RenderTexture, Point, Rectangle, Matrix, CONST, EventEmitter,Utils) {
     //暂存的矩阵
     var _tempMatrix = new Matrix(),
       _tempDisplayObjectParent = {
@@ -408,6 +408,19 @@ egame.define("DisplayObject", ["RenderTexture", "Point", "Rectangle", "Matrix", 
         this.worldTransform = null;
         this.filterArea = null;
     };
+
+    /**
+     * 显示对象的角度
+     */
+    Object.defineProperty(DisplayObject.prototype, "angle", {
+        get: function() {
+            return Utils.radToDeg(this.rotation);
+        },
+
+        set: function(value) {
+            this.rotation = Utils.degToRad(value);
+        }
+    });
 
     egame.DisplayObject = DisplayObject;
     return DisplayObject;

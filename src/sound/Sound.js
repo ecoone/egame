@@ -54,12 +54,12 @@ egame.define("Sound", function() {
             var iOSVersion = parseInt(RegExp.$1, 10);
             if(iOSVersion>8){
                 document.addEventListener('touchstart',function(){
-                    that.touchLocked = true;
-                }, false);
+                    that.touchLocked = false;
+                }, true);
             }else{
                 document.addEventListener('touchend', function(){
-                    that.touchLocked = true;
-                }, false);
+                    that.touchLocked = false;
+                }, true);
             }
         }
     };
@@ -139,6 +139,7 @@ egame.define("Sound", function() {
             for (var i = 0; i < this.webAudioPools.length; i++) {
                 var webAudio = this.webAudioPools[i];
                 if (!this.loop && webAudio.ended) {
+                    webAudio.source = this.audioContext.createBufferSource();
                     return webAudio;
                 }
             }

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>egame精灵模块</title>
+<meta name="viewport"content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta content="black"name="apple-mobile-web-app-status-bar-style"/>
+<script>
+(function() {
+    function refreshRem() {
+        var width = docEl.getBoundingClientRect().width;
+        rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+        docEl.style.fontSize = rem + "px";
+    }
+    var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+    refreshRem();
+
+    window.addEventListener("resize", function() {
+        clearTimeout(tid);
+        tid = setTimeout(refreshRem, 300);
+    }
+    , false);
+}
+)();
+
+</script>
+<link rel="stylesheet"href="../css/reset.css"/>
+<script type="text/javascript"src="../../lib/eco.js"></script>
+<script type="text/javascript"src="../../src/egameConfig.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+egame.configData.base = '../../src/'
+egame.use(['Game', 'Loader', 'Texture', 'Sprite', 'Text', 'Sound', 'SpriteSheetAnimation', 'Physics', 'ArcadeBody', 'Group', 'TilingSprite', 'Image', 'Audio', 'InteractionManager'], function(Game, Loader, Texture, Sprite, Text, Sound, SpriteSheetAnimation, Physics, ArcadeBody, Group, TilingSprite) {
+    //创建一个游戏对象
+    var game = new Game(480, 700, document.body, egame.ScaleMode.FULL_PAGE);
+    var load =  new Loader(game);
+    //全局变量
+    var SPEED = 180;
+    var GRAVITY = 570;
+    var FLAP = 300;
+    var SPAWN_RATE = 1 / 1.2;
+    var OPENING = 144;
+    var gameStarted, gameOver, score, bg, credits, clouds, fingers, invs, birdie, fence, scoreText, instText, gameOverText, flapSnd, scoreSnd, hurtSnd, fingersTimer, cloudsTimer, cobraMode = 0, gameOvers = 0;
+
+    var gameStatus = {
+        preload:function() {
+            game.physics = new Physics(game);
+            //要加载的图片
+            load.image("birdie", "assets/birdie.png");
+            load.image("clouds", "assets/clouds.png");
+            load.image("finger", "assets/finger.png");
+            load.image("fence", "assets/fence.png");
+            //要加载的音频
+            game.load.audio("flap", "assets/flap.wav");
+            game.load.audio("score", "assets/score.wav");
+            game.load.audio("hurt", "assets/hurt.wav");
+            //加载资源界面
+            game.stage.renderer.backgroundColor = 0x1099bb;
+            var basicText = new Text('当前进度：0%');
+            basicText.x = 150;
+            basicText.y = 100;
+            game.stage.addChild(basicText);
+
+            //资源加载状态捕获
+            //加载资源完成时候调用
+            game.load.on("resourceCompleted", function() {
+                basicText.text ='当前进度：'+game.load.progress+'%';
+            }
+            );
+
+            game.load.on("resourceErrored", function(resourceKey) {
+                alert("资源"+resourceKey+"加载失败");
+            }
+            );
+
+            // 所有加载资源完成时候调用
+            game.load.on("loadCompleted", function() {
+                basicText.text ='当前进度：'+game.load.progress+'%';
+                game.stage.removeChildren();
+            }
+            );
+        }
+        , create:function() {
+            //设置背景色
+            game.stage.backgroundColor = 0xDDEEFF;
+
+            credits = new Text('mniya.com\n@mni_Ya',{
+                font: '8px "Press Start 2P"', fill:'#fff', align:'center'
+            }
+            );
+            credits.x =  game.world.width / 2;
+            credits.y = 10;
+            credits.anchor.x = 0.5;
+            game.stage.addChild(credits);
+            // Add clouds group
+            clouds = new Group(game);
+            // Add fingers
+            fingers = new Group(game);
+            // Add invisible thingies
+            invs = new Group(game);
+            // Add birdie
+            birdie = new SpriteSheetAnimation(game, 'birdie', 48, 24);
+            birdie.anchor.setTo(0.5, 0.5);
+            birdie.add('fly', [0, 1, 2, 3], 10, true);
+            birdie.add('cobra', [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 60, false);
+            birdie.interactive = true;
+            game.physics.enable(birdie, egame.Physics.ARCADE);
+            birdie.body.collideWorldBounds = true;
+            birdie.body.gravity.y = GRAVITY;
+            game.stage.addChild(birdie);
+            // // Add fence
+            fence = new TilingSprite('fence', game.world.width, 32);
+            fence.x =0;
+            fence.y = game.world.height - 32;
+            fence.tileScale.setTo(2, 2);
+            game.stage.addChild(fence);
+
+            // // Add score text
+            scoreText =  new Text("",{
+                font: '16px "Press Start 2P"', fill:'#fff', stroke:'#430', strokeThickness:4, align:'center'
+            }
+            );
+            scoreText.x =game.world.width / 2;
+            scoreText.y = game.world.height / 4;
+            scoreText.anchor.setTo(0.5, 0.5);
+            game.stage.addChild(scoreText);
+
+            // Add instructions text
+            instText =new Text("",{
+                font: '8px "Press Start 2P"', fill:'#fff', stroke:'#430', strokeThickness:4, align:'center'
+            }
+            );
+            instText.x = game.world.width / 2;
+            instText.y = game.world.height - game.world.height / 4;
+            instText.anchor.setTo(0.5, 0.5);
+            game.stage.addChild(instText);
+
+            // Add game over text
+            gameOverText = new Text("",{
+                font: '16px "Press Start 2P"', fill:'#fff', stroke:'#430', strokeThickness:4, align:'center'
+            }
+            );
+            gameOverText.x =game.world.width / 2;
+            gameOverText.y =game.world.height / 2;
+            gameOverText.anchor.setTo(0.5, 0.5);
+            gameOverText.scale.setTo(2, 2);
+            game.stage.addChild(gameOverText);
+            // // Add sounds
+            flapSnd = new Sound('flap');
+            scoreSnd = new Sound('score');
+            hurtSnd = new Sound('hurt');
+            // // Add controls
+            game.stage.interactive = true;
+            window.stage = game.stage;
+            game.stage.on('touchstart', flap);
+            cloudsTimer =  game.time.create(false);
+            // cloudsTimer.onEvent.add(spawnCloud);
+            cloudsTimer.add(Math.random(), spawnCloud, this);
+            cloudsTimer.start();
+            // game.input.keyboard.addCallbacks(game, onKeyDown, onKeyUp);
+            // // Start clouds timer
+            // cloudsTimer = new Phaser.Timer(game);
+            // cloudsTimer.onEvent.add(spawnCloud);
+            // cloudsTimer.start();
+            // cloudsTimer.add(Math.random());
+            // RESET
+            reset();
+        }
+        , update:function() {
+            if (gameStarted) {
+                // Make birdie dive
+                var dvy = FLAP + birdie.body.velocity.y;
+                birdie.angle = (90 * dvy / FLAP) - 180;
+
+                if (birdie.angle < -30) {
+                    birdie.angle = -30;
+                }
+                if (gameOver ||
+                birdie.angle > 90 ||
+                birdie.angle < -90) {
+                    birdie.angle = 90;
+                    birdie.stop();
+                    birdie.frame = 3;
+                }
+                else {
+                    birdie.play(cobraMode > 0 ? 'cobra':'fly');
+                }
+                // Birdie is DEAD!
+                if (gameOver) {
+                    if (birdie.scale.x < 4) {
+                        birdie.scale.setTo(birdie.scale.x * 1.2, birdie.scale.y * 1.2);
+                    }
+                    // Shake game over text
+                    gameOverText.angle = Math.random() * 5 * Math.cos(game.time.now / 100);
+                }
+                else {
+                    // Check game over
+                    if (cobraMode < 1) {
+                        game.physics.arcade.overlap(birdie, fingers, setGameOver);
+
+                        if (!gameOver && birdie.body.bottom >= game.world.bounds.bottom) {
+                            setGameOver();
+                        }
+                    }
+                    // Add score
+                    game.physics.arcade.overlap(birdie, invs, addScore);
+                }
+                // Remove offscreen fingers
+                fingers.forEachAlive(function(finger) {
+                    if (finger.x + finger.width < game.world.bounds.left) {
+                        finger.kill();
+                    }
+                }
+                );
+                // Update finger timer
+                fingersTimer.update();
+            }
+            else {
+                birdie.y = (game.world.height / 2) + 8 * Math.cos(game.time.now / 200);
+            }
+            if (!gameStarted || gameOver) {
+                // Shake instructions text
+                instText.scale.setTo(2 + 0.1 * Math.sin(game.time.now / 100), 2 + 0.1 * Math.cos(game.time.now / 100));
+            }
+            // Shake score text
+            scoreText.scale.setTo(2 + 0.1 * Math.cos(game.time.now / 100), 2 + 0.1 * Math.sin(game.time.now / 100));
+            // Update clouds timer
+            cloudsTimer.update();
+
+            // Remove offscreen clouds
+            clouds.forEachAlive(function(cloud) {
+                if (cloud.x + cloud.width < game.world.bounds.left) {
+                    cloud.kill();
+                }
+            }
+            );
+
+            // Scroll fence
+            if (!gameOver) {
+                fence.tilePosition.x -= game.time.physicsElapsed * SPEED / 2;
+            }
+            // Decrease cobra mode
+            cobraMode -= game.time.physicsElapsed * SPEED * 5;
+        }
+    }
+    ;
+
+    function reset() {
+        gameStarted = false;
+        gameOver = false;
+        score = 0;
+        credits.renderable = true;
+        scoreText.text ="DON'T\nTOUCH\nMY\nBIRDIE";
+        instText.text ="TOUCH TO FLAP\nBIRDIE WINGS";
+        gameOverText.renderable = false;
+        birdie.body.allowGravity = false;
+        birdie.angle = 0;
+        birdie.reset(game.world.width / 4, game.world.height / 2);
+        birdie.scale.setTo(2, 2);
+        birdie.play('fly');
+        fingers.removeAll();
+        invs.removeAll();
+    }
+    function start() {
+        credits.renderable = false;
+        birdie.body.allowGravity = true;
+        // SPAWN FINGERS!
+        fingersTimer =   game.time.create(false);
+        // fingersTimer.onEvent.add(spawnFingers);
+        fingersTimer.add(2, spawnFingers);
+        fingersTimer.start();
+        // Show score
+        scoreText.text = score;
+        instText.renderable = false;
+        // START!
+        gameStarted = true;
+    }
+    function flap() {
+        if (!gameStarted) {
+            start();
+        }
+        if (!gameOver) {
+            birdie.body.velocity.y = -FLAP;
+            flapSnd.play();
+        }
+    }
+    function spawnCloud() {
+        cloudsTimer.stop();
+        var cloudY = Math.random() * game.height / 2;
+        var cloud = new SpriteSheetAnimation(game, 'clouds', 128, 64);
+        cloud.x =  game.width;
+        cloud.y = cloudY;
+        cloud.frame = Math.floor(4 * Math.random());
+        var cloudScale = 2 + 2 * Math.random();
+        cloud.alpha = 2 / cloudScale;
+        cloud.scale.setTo(cloudScale, cloudScale);
+        game.physics.enable(cloud, egame.Physics.ARCADE);
+        cloud.body.allowGravity = false;
+        cloud.body.velocity.x = -SPEED / cloudScale;
+        cloud.anchor.y = 0;
+        clouds.add(cloud)
+        cloudsTimer.add(4 * Math.random()*1000, spawnCloud);
+        cloudsTimer.start();
+    }
+    function o() {
+        return OPENING + 60 * ((score > 50 ? 50:50 - score) / 50);
+    }
+    function spawnFinger(fingerY, flipped) {
+        var finger = new Sprite('finger');
+        finger.x = game.width;
+        finger.y = fingerY + (flipped ? -o():o()) / 2;
+        game.physics.enable(finger, egame.Physics.ARCADE);
+        finger.body.allowGravity = false;
+        fingers.add(finger);
+        // Flip finger! *GASP*
+        finger.scale.setTo(2, flipped ? -2:2);
+        finger.body.offset.y = flipped ? -finger.body.height * 2:0;
+        // Move to the left
+        finger.body.velocity.x = -SPEED;
+        return finger;
+    }
+    function spawnFingers() {
+        fingersTimer.stop();
+        var fingerY = ((game.height - 16 - o() / 2) / 2) + (Math.random() > 0.5 ? -1:1) * Math.random() * game.height / 6;
+        // Bottom finger
+        var botFinger = spawnFinger(fingerY);
+        // Top finger (flipped)
+        var topFinger = spawnFinger(fingerY, true);
+        var inv = new Sprite();
+        inv.x = topFinger.x + topFinger.width;
+        inv.y = 0;
+        game.physics.enable(inv, egame.Physics.ARCADE);
+        invs.add(inv);
+        inv.width = 2;
+        inv.height = game.world.height;
+        inv.body.allowGravity = false;
+        inv.body.velocity.x = -SPEED;
+        fingersTimer.start();
+        fingersTimer.add((1 / SPAWN_RATE)*1000, spawnFingers);
+    }
+    function addScore(_, inv) {
+        invs.remove(inv);
+        score += 1;
+        scoreText.text =score;
+        scoreSnd.play();
+    }
+    function setGameOver() {
+        gameOver = true;
+        instText.text ="TOUCH BIRDIE\nTO TRY AGAIN";
+        instText.renderable = true;
+        var hiscore = window.localStorage.getItem('hiscore');
+        hiscore = hiscore ? hiscore: score;
+        hiscore = score > parseInt(hiscore, 10) ? score: hiscore;
+        window.localStorage.setItem('hiscore', hiscore);
+        gameOverText.text ="GAME OVER";
+        gameOverText.renderable = true;
+
+        // Stop all fingers
+        fingers.forEachAlive(function(finger) {
+            finger.body.velocity.x = 0;
+        }
+        );
+
+        invs.forEach(function(inv) {
+            inv.body.velocity.x = 0;
+        }
+        );
+        // Stop spawning fingers
+        fingersTimer.stop();
+        // Make birdie reset the game
+        birdie.once("touchstart", reset);
+        hurtSnd.play();
+        gameOvers++;
+    }
+    //添加状态并在游戏启动后自动启动
+    game.state.add("main", gameStatus, true);
+    game.boot();
+}
+);
+</script>
+</body>
+</html>

@@ -615,9 +615,7 @@ InteractionManager.prototype.onTouchStart = function (event)
 
         this.eventData.data = touchData;
         this.eventData.stopped = false;
-
         this.processInteractive( touchData.global, this.renderer._lastObjectRendered, this.processTouchStart, true );
-
         this.returnTouchData( touchData );
     }
 };

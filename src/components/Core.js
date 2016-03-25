@@ -49,7 +49,8 @@ egame.define("Core", ["Component", "Point"], function(Component, Point) {
             {
                 return false;
             }
-            this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
+            this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
+            // this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
             //精灵表动画
             if (this.type == egame.SPRITESHEET_ANIMATION) {
                 this.updateAnimation();

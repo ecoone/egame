@@ -93,6 +93,9 @@
                     playText.on('mousedown', function(){
                         sound.play();
                     });
+                    playText.on('touchstart', function(){
+                        sound.play();
+                    });
                     //暂停声音播放
                     pauseText.on('mousedown', function(){
                         sound.pause();
