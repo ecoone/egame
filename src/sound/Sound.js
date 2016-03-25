@@ -97,6 +97,7 @@ egame.define("Sound", function() {
             }
             if (this.audio.audioType == egame.Audio.AudioType.AUDIO_TAG) {
                 var audioTag = this.getOpenAudioTag();
+                if(!audioTag)  return;
                 audioTag.src = this.audio.data.src;
                 audioTag.volume = this.volume;
                 audioTag.loop = this.loop;
