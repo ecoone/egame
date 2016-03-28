@@ -15,7 +15,7 @@ egame.define("SpriteSheetAnimation",["SpriteSheet","Animation"],function(SpriteS
          * @property {egame.Game} game - A reference to the currently running Game.
          */
         this.game = game;
-        this.type= egame.SPRITESHEET_ANIMATION
+        this.type= egame.SPRITESHEET_ANIMATION;
         /**
          * @property {egame.Animation} currentAnim - The currently displayed animation, if any.
          * @default

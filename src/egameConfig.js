@@ -16,6 +16,8 @@ egame.config({
 		"Camera": 'core/Camera.js',
 		"World": 'core/World.js',
 		"Group": 'core/Group.js',
+		"GameObjectCreator": 'core/GameObjectCreator.js',
+		"Debug": 'debug/Debug.js',//Debug方法
 		"Loader": 'loader/Loader.js', //加载器
 		"Resource": 'loader/Resource.js',
 		"Image": 'loader/Image.js',

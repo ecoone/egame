@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>egame游戏对象创建器</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <script>
+    (function() {
+        function refreshRem() {
+            var width = docEl.getBoundingClientRect().width;
+            rem = width / (BASE_WIDTH / ROOT_FONT_SIZE);
+            docEl.style.fontSize = rem + "px";
+        }
+        var tid = null, docEl = document.documentElement, BASE_WIDTH = 640, ROOT_FONT_SIZE = 100;
+        refreshRem();
+         window.addEventListener("resize", function() {
+            clearTimeout(tid);
+            tid = setTimeout(refreshRem, 300);
+        }, false);
+    })();
+    </script>
+	<link rel="stylesheet" href="css/reset.css"/>
+	<script type="text/javascript" src="../lib/eco.js"></script>
+	<script type="text/javascript" src="../src/egameConfig.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+	  egame.use(['Game','Loader','Texture','Sprite','Text','SpriteSheet','GameObjectCreator','Image','Json'],function(Game,Loader,Texture,Sprite,Text,SpriteSheet,GameObjectCreator){
+            //创建一个游戏对象
+            var game = new Game(640,1008,document.body,egame.ScaleMode.FIXED_WIDTH);
+            var load =  new Loader(game);
+            var add =  new GameObjectCreator(game);
+            //初始画面
+            var loaddingStatus = {
+                preload:function(){
+                    game.load.image("fighter","images/fighter.png");
+                    game.load.json("fighterConfig","text/fighter.json");
+                    game.stage.backgroundColor = 0x1099bb;
+                    var basicText = game.add.text("当前进度：0%",150,100);
+                    //资源加载过程的进度条
+                    game.load.on("resourceCompleted",function(){
+                        basicText.text ='当前进度：'+game.load.progress+'%' ;
+                    });
+                    game.load.on("loadCompleted",function(){
+                            game.stage.removeChild(basicText); 
+                    })
+                },
+                create:function(){
+                    console.log("create");
+                    game.stage.backgroundColor = 0xffffff;
+                    var spriteSheet = game.add.spriteSheet("fighter",0,0,null,"fighterConfig");
+                    spriteSheet.frame =4;
+                    this.spriteSheet = spriteSheet;
+                },
+                update:function(){
+                   this.spriteSheet.frame++;
+                }
+            };
+            //启动游戏
+            game.boot();
+            //启动状态
+            game.state.add("loadding",loaddingStatus,true);
+            // game.state.start("loadding");
+                 
+      });
+	</script>
+</body>
+</html>

@@ -17,37 +17,36 @@ egame是一个使用ecojs开发的轻量级、模块化、易于扩展的2d canv
 12. 物理引擎(Physics)
 13. 输入(InteractionManager)
 14. 贴片地图(Tilemap)
+15. 游戏对象创建器(GameObjectCreator)
+16. 调试信息(Debug)
 
 ##基础使用例子
 ```
-egame.use(['Game', 'Loader', 'Texture', 'Sprite', 'Text', 'Image'], function(Game,Loader, Texture, Sprite, Text) {
+egame.use(['Game', 'Loader', 'Texture', 'Sprite','Text','GameObjectCreator','Image'], function(Game,Loader, Texture, Sprite, Text,GameObjectCreator) {
 	//创建一个游戏对象
 	var game = new Game(640, 1008, document.body, egame.ScaleMode.FIXED_WIDTH);
 	var load = new Loader(game);
+	var add =  new GameObjectCreator(game);
 	//初始画面
 	var loaddingStatus = {
 		preload: function() {
 			//设置要加载的资源
 			load.image("mniya", "images/1.jpg");
 			//加载资源界面
-			game.stage.renderer.backgroundColor = 0x1099bb;
-			var basicText = new Text('当前进度：0%');
-			basicText.x = 150;
-			basicText.y = 100;
-			game.stage.addChild(basicText);
-			//资源加载状态捕获
-			//加载资源完成时候调用
-			game.load.onResourceComplete.add(function() {
-				basicText.text = '当前进度：' + game.load.progress + '%';
-			});
-			game.load.onResourceError.add(function(resourceKey) {
-				alert("资源" + resourceKey + "加载失败");
-			});
-			// 所有加载资源完成时候调用
-			game.load.onLoadComplete.add(function() {
-				basicText.text = '当前进度：' + game.load.progress + '%';
-				game.stage.removeChildren();
-			});
+			game.stage.backgroundColor = 0x1099bb;
+			var basicText = game.add.text("当前进度：0%",150,100);
+            //加载资源完成时候调用
+            game.load.on("resourceCompleted",function(){
+                basicText.text ='当前进度：'+game.load.progress+'%' ;
+            });
+            game.load.on("resourceErrored",function(resourceKey){
+                alert("资源"+resourceKey+"加载失败");
+            });
+            // 所有加载资源完成时候调用
+            game.load.on("loadCompleted",function(){
+                basicText.text ='当前进度：'+game.load.progress+'%' ;
+                game.stage.removeChildren();
+            });
 		},
 		create: function() {
 			//设置背景色

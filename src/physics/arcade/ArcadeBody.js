@@ -434,15 +434,7 @@ egame.define("ArcadeBody", ["Arcade"], function(Arcade) {
             {
                 return;
             }
-                    // console.log("preUpdate")
-                    // console.log(this.velocity)
-                    // console.log("preUpdate2")
-                    if(!window.f||window.f<1500){
-                        if(!window.f)  window.f=0;
-            // console.log(this);
-            window.particle = this;
-            window.f++;
-        }
+
             this.dirty = true;
 
             //  Store and reset collision flags
@@ -844,7 +836,6 @@ egame.define("ArcadeBody", ["Arcade"], function(Arcade) {
      * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
      */
     egame.Physics.Arcade.Body.render = function(context, body, color, filled) {
-
         if (filled === undefined) {
             filled = true;
         }
