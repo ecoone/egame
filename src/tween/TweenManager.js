@@ -18,7 +18,7 @@ egame.define("TweenManager",["Tween"],function(Tween) {
          * @property {egame.Game} game - Local reference to game.
          */
         this.game = game;
-        if(game) this.game.tweens = this;
+       if(game) this.game.tweens = this;
 
         /**
          * Are all newly created Tweens frame or time based? A frame based tween will use the physics elapsed timer when updating. This means

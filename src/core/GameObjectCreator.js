@@ -49,7 +49,7 @@ egame.define("GameObjectCreator", function() {
          */
         text: function(x, y, text, style, parent) {
 
-            var text = new egame.Text(text);
+            var text = new egame.Text(text,style);
             text.x = x || 0;
             text.y = y || 0;
             if (parent) {

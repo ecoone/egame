@@ -1,4 +1,4 @@
-egame.define("Sprite", ["CONST", "Utils", "Point", "CanvasTinter", "Container", "Texture", "Component", "Core", "FixedToCamera", "InCamera", "Overlap", "LifeSpan", "Smoothed", "Reset", "InWorld"], function(CONST, Utils, Point, CanvasTinter, Container, Texture, Component, Core, FixedToCamera, InCamera, Overlap, LifeSpan, Smoothed, Reset, InWorld) {
+egame.define("Sprite", ["CONST", "Utils", "Point", "CanvasTinter", "Container", "Texture", "Component", "Core", "FixedToCamera", "InCamera", "Overlap", "LifeSpan", "Smoothed", "Reset", "InWorld","InputEnabled"], function(CONST, Utils, Point, CanvasTinter, Container, Texture, Component, Core, FixedToCamera, InCamera, Overlap, LifeSpan, Smoothed, Reset, InWorld,InputEnabled) {
     var tempPoint = new Point();
     /**
      * 
@@ -470,7 +470,7 @@ egame.define("Sprite", ["CONST", "Utils", "Point", "CanvasTinter", "Container", 
     Sprite.fromImage = function(imageId, crossorigin, scaleMode) {
         return new Sprite(Texture.fromImage(imageId, crossorigin, scaleMode));
     };
-    Component.install.call(Sprite.prototype, ["Core", "FixedToCamera", "InCamera", "Overlap", "LifeSpan", "Smoothed", "Reset", "InWorld"]);
+    Component.install.call(Sprite.prototype, ["Core", "FixedToCamera", "InCamera", "Overlap", "LifeSpan", "Smoothed", "Reset", "InWorld","InputEnabled"]);
     egame.Sprite = Sprite;
     return Sprite;
 });

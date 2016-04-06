@@ -23,6 +23,11 @@ egame.define("Stage", ["Container", "CanvasRenderer", "CONST"], function(Contain
          * @property {CanvasElement} canvas元素
          */
         this.canvas = this.renderer.view;
+        /**
+         * 记录被更新的显示对象数目，每一次更新之前变为0
+         * @type {Number}
+         */
+        this.currentRenderOrderID = 0;
 
         /**
          * @property {CanvasContext} canvas上下文环境
@@ -67,7 +72,7 @@ egame.define("Stage", ["Container", "CanvasRenderer", "CONST"], function(Contain
      * @method egame.Stage#preUpdate
      */
     egame.Stage.prototype.preUpdate = function() {
-
+        this.currentRenderOrderID = 0;
         for (var i = 0; i < this.children.length; i++) {
             this.children[i].preUpdate();
         }

@@ -132,6 +132,7 @@ egame.define("Game", ["RequestAnimationFrame", "EventEmitter", "StateManager", "
 				this.state.update();
 				this.stage.update();
 				if (this.tweens) this.tweens.update();
+				if (this.keyboard) this.keyboard.update();
 				if (this.physics) this.physics.update();
 				if (this.particles) this.particles.update();
 

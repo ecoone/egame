@@ -42,28 +42,23 @@ egame.define("Sound", function() {
         this.position = 0;
         //播放的时间长度
         this.duration = undefined;
-        //是否需要手势解锁，因为有些手机如iphone必须需要于屏幕交互才可播放
-        this.touchLocked = false;
         //是否播放过
         this._played = false;
-        var ua = navigator.userAgent;
-        if(/iP[ao]d|iPhone/i.test(ua)){
-             this.touchLocked = true;
-            var that = this;
-            (navigator.appVersion).match(/OS (\d+)/);
-            var iOSVersion = parseInt(RegExp.$1, 10);
-            if(iOSVersion>8){
-                document.addEventListener('touchstart',function(){
-                    that.touchLocked = false;
-                }, true);
-            }else{
-                document.addEventListener('touchend', function(){
-                    that.touchLocked = false;
-                }, true);
-            }
-        }
     };
-    
+    //是否需要手势解锁，因为有些手机如iphone必须需要于屏幕交互才可播放
+    egame.Sound.touchLocked = false; 
+    var ua = navigator.userAgent;
+    if(/iP[ao]d|iPhone/i.test(ua)){
+         egame.Sound.touchLocked = true;
+        (navigator.appVersion).match(/OS (\d+)/);
+        var iOSVersion = parseInt(RegExp.$1, 10);
+        document.addEventListener('touchstart',function(){
+            egame.Sound.touchLocked = false;
+        }, true);
+        document.addEventListener('touchend', function(){
+            egame.Sound.touchLocked = false;
+        }, true);
+    }
     egame.Sound.prototype = {
         /**
          * 播放音频文件
@@ -74,7 +69,7 @@ egame.define("Sound", function() {
          */
         play: function(loop, volume, position, duration) {
             //当没有触摸的时候不可播放
-            if(this.touchLocked) return;
+            if(egame.Sound.touchLocked) return;
             if (!this.audio.decodeData&&this.audio.audioType != egame.Audio.AudioType.AUDIO_TAG) {
                 this.decodeCompleteQuenes.push({
                     arguments: arguments,
