@@ -36,6 +36,7 @@ egame.config({
 		"RoundedRectangle": 'math/shapes/RoundedRectangle.js',
 		"Rectangle": 'math/shapes/Rectangle.js',
 		"QuadTree": 'math/QuadTree.js',
+		"ArraySet": 'math/ArraySet.js',
 		"RandomDataGenerator": 'math/RandomDataGenerator.js',
 		"DisplayObject": 'display/DisplayObject.js', //显示容器和显示对象
 		"Container": 'display/Container.js',
@@ -59,11 +60,14 @@ egame.config({
 		"Overlap": 'components/Overlap.js',
 		"LifeSpan": 'components/LifeSpan.js',
 		"InWorld": 'components/InWorld.js',
+		"InputEnabled": 'components/InputEnabled.js',
 		"Smoothed": 'components/Smoothed.js',
 		"Reset": 'components/Reset.js',
 		"InteractionData": 'interaction/InteractionData.js', //输入部分
 		"interactiveTarget": 'interaction/interactiveTarget.js',
 		"InteractionManager": 'interaction/InteractionManager.js',
+		"Keyboard": 'input/Keyboard.js',
+		"Key": 'input/Key.js',
 		"SpriteSheet": 'spritesheet/SpriteSheet.js', //精灵表及精灵动画部分
 		"SpriteSheetParser": 'spritesheet/SpriteSheetParser.js',
 		"Frame": 'spritesheet/Frame.js',
@@ -87,6 +91,21 @@ egame.config({
 		"TilemapLayer": 'tilemap/TilemapLayer.js',
 		"TilemapParser": 'tilemap/TilemapParser.js',
 		"Tileset": 'tilemap/Tileset.js',
-		'TilemapCollision': 'tilemap/TilemapCollision.js'
+		'TilemapCollision': 'tilemap/TilemapCollision.js',
+		'Input': 'input/Input.js',
+		'InputHandler': 'input/InputHandler.js',
+		'InputManager': 'input/InputManager.js',
+		'InputUtils': 'input/InputUtils.js',
+		'Recognizer': 'input/Recognizer.js',
+		'TouchAction': 'input/TouchAction.js',
+		'MouseInput': 'input/input/MouseInput.js',
+		'PointerEventInput': 'input/input/PointerEventInput.js',
+		'SingleTouchInput': 'input/input/SingleTouchInput.js',
+		'TouchInput': 'input/input/TouchInput.js',
+		'AttrRecognizer': 'input/recognizers/AttrRecognizer.js',
+		'Pan': 'input/recognizers/PanRecognizer.js',
+		'Press': 'input/recognizers/PressRecognizer.js',
+		'Swipe': 'input/recognizers/SwipeRecognizer.js',
+		'Tap': 'input/recognizers/TapRecognizer.js',
 	}
 });

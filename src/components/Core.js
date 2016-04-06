@@ -47,10 +47,14 @@ egame.define("Core", ["Component", "Point"], function(Component, Point) {
 
             if (!this._exists || !this.parent.exists)
             {
+                this.renderOrderID = -1;
                 return false;
             }
             this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
             // this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
+            if (this.visible) {
+                this.renderOrderID = this.game.stage.currentRenderOrderID++;
+            }
             //精灵表动画
             if (this.type == egame.SPRITESHEET_ANIMATION) {
                 this.updateAnimation();
