@@ -79,6 +79,7 @@ egame.use(['Game', 'Loader', 'Texture', 'Sprite','Text','GameObjectCreator','Ima
 ## 项目构建
 1. 加载所需模块 ```npm install```
 2. 生成api文档  ```gulp doc``` 注意由于fonts.googleapis.com可能无法访问，需要把生成文件的styles目录中样式的```@import url("https://fonts.googleapis.com/css?family=Lato:300,400,700"); ```去掉。
+
 ## LICENSE
 发布于(http://opensource.org/licenses/MIT) MIT License.
 
