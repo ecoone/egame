@@ -1,0 +1,31 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "opts": {
+    "destination": "./docs"
+  },
+  "plugins": ["plugins/markdown"],
+  "templates": {
+    "logoFile": "",
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "dateFormat": "ddd MMM Do YYYY",
+    "outputSourceFiles": true,
+    "outputSourcePath": true,
+    "systemName": "egame",
+    "footer": "",
+    "copyright": "egame Copyright © 2016",
+    "navType": "egame",
+    "theme": "flatly",
+    "linenums": true,
+    "collapseSymbols": false,
+    "inverseNav": true,
+    "protocol": "html://",
+    "methodHeadingReturns": false
+  },
+  "markdown": {
+    "parser": "gfm",
+    "hardwrap": true
+  }
+}

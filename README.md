@@ -1,8 +1,8 @@
-#egame游戏引擎
+# egame游戏引擎
 
 egame是一个使用ecojs开发的轻量级、模块化、易于扩展的2d canvas渲染的h5游戏引擎。
 ![logo](https://github.com/ecoone/egame/blob/master/demo/images/egame-logo.png)
-##egame包含的特性
+## egame包含的特性
 1.  资源加载（Loader）
 2.  canvas渲染
 3.  状态管理(Status)
@@ -21,7 +21,7 @@ egame是一个使用ecojs开发的轻量级、模块化、易于扩展的2d canv
 15. 游戏对象创建器(GameObjectCreator)
 16. 调试信息(Debug)
 
-##基础使用例子
+## 基础使用例子
 ```
 egame.use(['Game', 'Loader', 'Texture', 'Sprite','Text','GameObjectCreator','Image'], function(Game,Loader, Texture, Sprite, Text,GameObjectCreator) {
 	//创建一个游戏对象
@@ -76,8 +76,10 @@ egame.use(['Game', 'Loader', 'Texture', 'Sprite','Text','GameObjectCreator','Ima
 	game.boot();
 });
 ```
-
-##LICENSE
+## 项目构建
+1. 加载所需模块 ```npm install```
+2. 生成api文档  ```gulp doc``` 注意由于fonts.googleapis.com可能无法访问，需要把生成文件的styles目录中样式的```@import url("https://fonts.googleapis.com/css?family=Lato:300,400,700"); ```去掉。
+## LICENSE
 发布于(http://opensource.org/licenses/MIT) MIT License.
 
 

@@ -1,0 +1,22 @@
+{
+  "name": "egame",
+  "version": "1.0.0",
+  "description": "一个轻量、2D的javascript游戏引擎",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ecoone/egame.git"
+  },
+  "author": "mni_Ya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ecoone/egame/issues"
+  },
+  "homepage": "https://github.com/ecoone/egame#readme",
+  "devDependencies": {
+    "gulp-jsdoc3": "^0.2.1"
+  }
+}
