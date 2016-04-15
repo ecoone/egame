@@ -105,6 +105,9 @@ egame.define("Sound", function() {
                 source.buffer = this.audio.decodeData;
                 if (!this.duration) this.duration = source.buffer.duration;
                 source.loop = this.loop;
+                if(source.loop){
+                   this.duration = undefined; 
+                }
                 this.volume = this.volume;
                 source.connect(gainNode);
                 gainNode.connect(this.audioContext.destination);
