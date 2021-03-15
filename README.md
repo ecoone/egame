@@ -1,6 +1,6 @@
 # egame游戏引擎
 
-egame是一个使用ecojs开发的轻量级、模块化、易于扩展的2d canvas渲染的h5游戏引擎。
+egame是一个使用ecojs开发的轻量级、模块化、易于扩展的2d canvas渲染的h5游戏引擎 。
 ![logo](https://github.com/ecoone/egame/blob/master/demo/images/egame-logo.png)
 ## egame包含的特性
 1.  资源加载（Loader）
